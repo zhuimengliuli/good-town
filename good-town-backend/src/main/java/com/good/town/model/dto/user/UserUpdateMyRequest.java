@@ -13,14 +13,14 @@ import java.io.Serializable;
 public class UserUpdateMyRequest implements Serializable {
 
     /**
-     * 用户昵称
+     * 密码
      */
-    private String userName;
+    private String userPassword;
 
     /**
-     * 用户头像
+     * 电话
      */
-    private String userAvatar;
+    private String phone;
 
     /**
      * 简介

@@ -1,34 +1,35 @@
-package com.good.town.model.dto.user;
+package com.good.town.model.dto.assistance;
 
 import com.good.town.common.PageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
- * 用户查询请求
+ * 查询助力服务请求
  *
  *
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class UserQueryRequest extends PageRequest implements Serializable {
+public class AssistanceQueryRequest extends PageRequest implements Serializable {
+
     /**
      * id
      */
     private Long id;
 
+    /**
+     * id
+     */
+    private Long notId;
 
     /**
-     * 用户姓名
+     * 助力描述
      */
-    private String userName;
-
-    /**
-     * 电话
-     */
-    private String phone;
+    private String description;
 
     /**
      * 查询词
@@ -36,19 +37,14 @@ public class UserQueryRequest extends PageRequest implements Serializable {
     private String searchText;
 
     /**
-     * 用户昵称
+     * 助力介绍图片
      */
-    private String userNickName;
+    private String picture;
 
     /**
-     * 简介
+     * 创建用户 id
      */
-    private String userProfile;
-
-    /**
-     * 用户角色：user/admin/ban
-     */
-    private String userRole;
+    private Long userId;
 
     private static final long serialVersionUID = 1L;
 }

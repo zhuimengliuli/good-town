@@ -7,12 +7,12 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * 用户
- * @TableName user
+ * 宣传
+ * @TableName promotion
  */
-@TableName(value ="user")
+@TableName(value ="promotion")
 @Data
-public class User implements Serializable {
+public class Promotion implements Serializable {
     /**
      * id
      */
@@ -20,49 +20,44 @@ public class User implements Serializable {
     private Long id;
 
     /**
-     * 账号
+     * 用户id
      */
-    private String userAccount;
+    private Long userId;
 
     /**
-     * 密码
+     * 乡镇id
      */
-    private String userPassword;
+    private Long townId;
 
     /**
-     * 电话
+     * 宣传类型
      */
-    private String phone;
+    private String type;
 
     /**
-     * 用户姓名
+     * 宣传主题名称
      */
-    private String userName;
+    private String themeName;
 
     /**
-     * 用户昵称
+     * 宣传描述
      */
-    private String userNickName;
+    private String description;
 
     /**
-     * 用户证件号码
+     * 图片
      */
-    private String userIDCard;
+    private String picture;
 
     /**
-     * 用户证件类型
+     * 视频
      */
-    private String userIDCardType;
+    private String video;
 
     /**
-     * 用户简介
+     * 状态：0：已发布 -1：已取消
      */
-    private String userProfile;
-
-    /**
-     * 用户角色：user/admin/ban
-     */
-    private String userRole;
+    private String state;
 
     /**
      * 创建时间
