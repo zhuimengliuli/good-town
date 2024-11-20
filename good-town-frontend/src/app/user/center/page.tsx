@@ -1,87 +1,72 @@
 "use client";
-import {LockOutlined, UserOutlined} from "@ant-design/icons";
-import {LoginForm, ProForm, ProFormText} from "@ant-design/pro-components";
-import {Image, message} from "antd";
-import {useDispatch} from "react-redux";
-import {AppDispatch} from "@/stores";
-import {useRouter} from "next/navigation";
-import Link from "next/link";
+import React, { useState } from 'react';
+import { Form, Input, Button, Upload, message } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import {useSelector} from "react-redux";
+import {RootState} from "@/stores";
+import {updateUserUsingPost} from "@/api/userController";
 
-/**
- * 用户中心界面
- * @param props
- * @constructor
- */
-const UserCenterPage: React.FC = (props) => {
-  const [form] = ProForm.useForm();
-  const dispatch = useDispatch<AppDispatch>();
-  const router = useRouter();
-  const doSubmit = async (values: any) => {
+const UserInfo = () => {
+    const loginUser = useSelector((state: RootState) => state.loginUser);
 
-  };
-  return (
-    <div id="userCenterPage">
-      <LoginForm
-        form={form}
-        logo={<Image src={"/assets/logo.png"} width={42} height={42} />}
-        title="好乡镇 - 用户注册"
-        subTitle="开发网站"
-        onFinish={doSubmit}
-      >
-        <ProFormText
-          name="userAccount"
-          fieldProps={{
-            size: "large",
-            prefix: <UserOutlined />,
-          }}
-          placeholder={"请输入用户账号"}
-          rules={[
-            {
-              required: true,
-              message: "请输入用户名!",
-            },
-          ]}
-        />
-        <ProFormText.Password
-          name="userPassword"
-          fieldProps={{
-            size: "large",
-            prefix: <LockOutlined />,
-          }}
-          placeholder={"请输入密码"}
-          rules={[
-            {
-              required: true,
-              message: "请输入密码！",
-            },
-          ]}
-        />
-        <ProFormText.Password
-            name="userCheckPassword"
-            fieldProps={{
-              size: "large",
-              prefix: <LockOutlined />,
-            }}
-            placeholder={"确认密码"}
-            rules={[
-              {
-                required: true,
-                message: "请确认密码！",
-              },
-            ]}
-        />
-        <div
-          style={{
-            marginBlockEnd: 24,
-            textAlign: "end",
-          }}
-        >
-          已有账号？
-            <Link href="/user/login">去登录</Link>
+    const onFinish = (values: any) => {
+        try {
+            const res = updateUserUsingPost(values);
+            if (res.data) {
+                message.success('信息已更新！');
+            }
+        } catch(e: any) {
+            message.error('信息更新失败！' + e.message());
+        }
+
+
+    };
+
+    return (
+        <div>
+            <h2>个人信息</h2>
+            <Form
+                layout="vertical"
+                initialValues={loginUser}
+                onFinish={onFinish}
+                style={{ maxWidth: '400px' }}
+            >
+                <Form.Item label="用户昵称" name="userNickName">
+                    <Input />
+                </Form.Item>
+                <Form.Item label="电话" name="phone">
+                    <Input />
+                </Form.Item>
+                <Form.Item label="姓名" name="userName">
+                    <Input />
+                </Form.Item>
+                <Form.Item label="证件号码" name="userIDCard">
+                    <Input />
+                </Form.Item>
+                <Form.Item label="证件类型" name="userIDCardType">
+                    <Input />
+                </Form.Item>
+                <Form.Item label="用户简介" name="userProfile">
+                    <Input />
+                </Form.Item>
+                <Form.Item label="头像">
+                    <Upload
+                        showUploadList={false}
+                        beforeUpload={(file) => {
+                            updateUserUsingPost({...loginUser, userAvatar: URL.createObjectURL(file) });
+                            return false;
+                        }}
+                    >
+                        <Button icon={<UploadOutlined />}>上传头像</Button>
+                    </Upload>
+                    {loginUser.userAvatar && <img src={loginUser.userAvatar} alt="avatar" style={{ width: 100, marginTop: 10 }} />}
+                </Form.Item>
+                <Form.Item>
+                    <Button type="primary" htmlType="submit">保存</Button>
+                </Form.Item>
+            </Form>
         </div>
-      </LoginForm>
-    </div>
-  );
+    );
 };
 
-export default UserCenterPage;
+export default UserInfo;

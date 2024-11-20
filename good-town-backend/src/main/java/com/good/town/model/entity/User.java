@@ -40,7 +40,7 @@ public class User implements Serializable {
     private String userName;
 
     /**
-     * 用户姓名
+     * 用户头像
      */
     private String userAvatar;
 
@@ -50,12 +50,12 @@ public class User implements Serializable {
     private String userNickName;
 
     /**
-     * 用户证件号码
+     * 证件号码
      */
     private String userIDCard;
 
     /**
-     * 用户证件类型
+     * 证件类型
      */
     private String userIDCardType;
 

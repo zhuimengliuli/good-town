@@ -17,7 +17,12 @@ public class UserUpdateRequest implements Serializable {
     private Long id;
 
     /**
-     * 用户昵称
+     * 电话
+     */
+    private String phone;
+
+    /**
+     * 用户姓名
      */
     private String userName;
 
@@ -27,7 +32,22 @@ public class UserUpdateRequest implements Serializable {
     private String userAvatar;
 
     /**
-     * 简介
+     * 用户昵称
+     */
+    private String userNickName;
+
+    /**
+     * 证件号码
+     */
+    private String userIDCard;
+
+    /**
+     * 证件类型
+     */
+    private String userIDCardType;
+
+    /**
+     * 用户简介
      */
     private String userProfile;
 
