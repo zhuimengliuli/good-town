@@ -41,6 +41,11 @@ public class UserQueryRequest extends PageRequest implements Serializable {
     private String userNickName;
 
     /**
+     * 用户头像
+     */
+    private String userAvatar;
+
+    /**
      * 简介
      */
     private String userProfile;

@@ -40,6 +40,11 @@ public class User implements Serializable {
     private String userName;
 
     /**
+     * 用户姓名
+     */
+    private String userAvatar;
+
+    /**
      * 用户昵称
      */
     private String userNickName;

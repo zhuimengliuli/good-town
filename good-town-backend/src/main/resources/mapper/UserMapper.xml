@@ -10,6 +10,7 @@
             <result property="userPassword" column="userPassword" jdbcType="VARCHAR"/>
             <result property="phone" column="phone" jdbcType="VARCHAR"/>
             <result property="userName" column="userName" jdbcType="VARCHAR"/>
+            <result property="userAvatar" column="userAvatar" jdbcType="VARCHAR"/>
             <result property="userNickName" column="userNickName" jdbcType="VARCHAR"/>
             <result property="userIDCard" column="userIDCard" jdbcType="VARCHAR"/>
             <result property="userIDCardType" column="userIDCardType" jdbcType="VARCHAR"/>

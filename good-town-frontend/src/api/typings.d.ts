@@ -410,6 +410,7 @@ declare namespace API {
     phone?: string;
     updateTime?: string;
     userAccount?: string;
+    userAvatar?: string;
     userIDCard?: string;
     userIDCardType?: string;
     userName?: string;
@@ -438,6 +439,7 @@ declare namespace API {
     searchText?: string;
     sortField?: string;
     sortOrder?: string;
+    userAvatar?: string;
     userName?: string;
     userNickName?: string;
     userProfile?: string;
@@ -462,6 +464,7 @@ declare namespace API {
 
   type UserUpdateRequest = {
     id?: number;
+    userAvatar?: string;
     userName?: string;
     userProfile?: string;
     userRole?: string;
