@@ -1,81 +1,144 @@
 "use client";
+import {
+  ProForm,
+  ProFormSelect,
+  ProFormText,
+  ProFormTextArea,
+} from "@ant-design/pro-components";
+import {Avatar, Card, Col, message, Row, Space} from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/stores";
 import React from "react";
-import { Button, Form, Input, message, Upload } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import { useSelector } from "react-redux";
-import { RootState } from "@/stores";
-import { updateUserUsingPost } from "@/api/userController";
+import {getLoginUserUsingGet, updateMyUserUsingPost} from "@/api/userController";
+import useForm = ProForm.useForm;
+import { setLoginUser } from "@/stores/loginUser";
+import Title from "antd/es/typography/Title";
+import Paragraph from "antd/es/typography/Paragraph";
+import {useRouter} from "next/navigation";
 
-const UserInfo = () => {
+
+/**
+ * 用户中心页面
+ * @constructor
+ */
+const UserCenterPage: React.FC = () => {
   const loginUser = useSelector((state: RootState) => state.loginUser);
-
-  const onFinish = (values: any) => {
-    try {
-      const res = updateUserUsingPost(values);
-      if (res.data) {
-        message.success("信息已更新！");
-      }
-    } catch (e: any) {
-      message.error("信息更新失败！" + e.message());
-    }
-  };
-
+    const router = useRouter();
+  const [form] = useForm();
+  const dispatch = useDispatch<AppDispatch>();
   return (
     <div>
-      <h2>个人信息</h2>
-      <Form
-        layout="vertical"
-        initialValues={loginUser}
-        onFinish={onFinish}
-        style={{ maxWidth: "400px" }}
-      >
-        <Form.Item label="用户昵称" name="userNickName">
-          <Input />
-        </Form.Item>
-        <Form.Item label="电话" name="phone">
-          <Input />
-        </Form.Item>
-        <Form.Item label="姓名" name="userName">
-          <Input />
-        </Form.Item>
-        <Form.Item label="证件号码" name="userIDCard">
-          <Input />
-        </Form.Item>
-        <Form.Item label="证件类型" name="userIDCardType">
-          <Input />
-        </Form.Item>
-        <Form.Item label="用户简介" name="userProfile">
-          <Input />
-        </Form.Item>
-        <Form.Item label="头像">
-          <Upload
-            showUploadList={false}
-            beforeUpload={(file) => {
-              updateUserUsingPost({
-                ...loginUser,
-                userAvatar: URL.createObjectURL(file),
-              });
-              return false;
-            }}
-          >
-            <Button icon={<UploadOutlined />}>上传头像</Button>
-          </Upload>
-          {loginUser.userAvatar && (
-            <img
-              src={loginUser.userAvatar}
-              alt="avatar"
-              style={{ width: 100, marginTop: 10 }}
+      <Row gutter={[16, 16]}>
+        <Col xs={24} md={6}>
+          <Card style={{ textAlign: "center" }}>
+            <Avatar src={loginUser.userAvatar} size={288} />
+            <div style={{ marginBottom: 16 }} />
+            <Card.Meta
+              title={
+                <Title level={4} style={{ marginBottom: 0 }}>
+                  {loginUser.userName}
+                </Title>
+              }
+              description={
+                <Paragraph type="secondary">{loginUser.userProfile}</Paragraph>
+              }
             />
-          )}
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            保存
-          </Button>
-        </Form.Item>
-      </Form>
+          </Card>
+        </Col>
+          <Col xs={24} md={1}/>
+        <Col xs={24} md={12}>
+            <div style={{
+                margin: 24,
+            }}>
+                <ProForm<API.UserVO>
+                    layout="horizontal"
+                    onFinish={async (values) => {
+                        try {
+                            const res = updateMyUserUsingPost(values);
+                            if (res.data) {
+                                message.success("提交成功");
+                                dispatch(setLoginUser(values));
+                            }
+                            router.push("/user/center");
+                        } catch (e: any) {
+                            message.error("修改用户信息失败，" + e.message);
+                        }
+                    }}
+                    submitter={{
+                        render: (props, doms) => {
+                            return  (
+                                <Row>
+                                    <Col span={14} offset={4}>
+                                        <Space>{doms}</Space>
+                                    </Col>
+                                </Row>
+                            );
+                        },
+                    }}
+                    autoFocusFirstInput
+                    form={form}
+                    initialValues={loginUser}
+                >
+                    <ProFormText
+                        width="md"
+                        name="userName"
+                        label="姓名"
+                        initialValue={loginUser.userName}
+                    />
+                    <ProFormText
+                        width="md"
+                        name="phone"
+                        label="电话"
+                        initialValue={loginUser.phone}
+                    />
+                    <ProFormText
+                        width="md"
+                        name="userNickName"
+                        label="用户昵称"
+                        placeholder="请输入名称"
+                        initialValue={loginUser.userNickName}
+                    />
+                    <ProFormText
+                        name="userIDCard"
+                        width="md"
+                        label="证件号码"
+                        disabled
+                        initialValue={loginUser.userIDCard}
+                    />
+                    <ProFormSelect
+                        initialValue={loginUser.userIDCardType}
+                        name="userIDCardType"
+                        label="证件类型"
+                        disabled
+                        width="md"
+                        options={[
+                            {
+                                value: "身份证",
+                                label: "身份证",
+                            },
+                            {
+                                value: "护照",
+                                label: "护照",
+                            },
+                            {
+                                value: "港澳通行证",
+                                label: "港澳通行证",
+                            },
+                        ]}
+                    />
+                    <ProFormTextArea
+                        colProps={{ span: 24 }}
+                        name="userProfile"
+                        label="用户简介"
+                        initialValue={loginUser.userProfile}
+                    />
+                </ProForm>
+            </div>
+
+        </Col>
+      </Row>
     </div>
   );
 };
 
-export default UserInfo;
+export default UserCenterPage;

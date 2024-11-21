@@ -8,6 +8,7 @@ import { Provider, useDispatch } from "react-redux";
 import { getLoginUserUsingGet } from "@/api/userController";
 import { setLoginUser } from "@/stores/loginUser";
 import AccessLayout from "@/access/AccessLayout";
+import {DEFAULT_USER} from "@/app/constants/user";
 
 const InitLayout: React.FC<
   Readonly<{
@@ -16,11 +17,15 @@ const InitLayout: React.FC<
 > = ({ children }) => {
   const dispatch = useDispatch<AppDispatch>();
   const doInitLoginUser = useCallback(async () => {
-    const res = await getLoginUserUsingGet();
-    if (res.data) {
-      dispatch(setLoginUser(res.data));
-    } else {
-    }
+    dispatch(setLoginUser(DEFAULT_USER));\
+    // todo 全局初始化暂时关闭
+    // const res = await getLoginUserUsingGet();
+    // if (res.data) {
+    //   // todo
+    //   dispatch(setLoginUser(res.data));
+    // } else {
+    //   dispatch(setLoginUser(DEFAULT_USER));
+    // }
   }, []);
 
   useEffect(() => {
