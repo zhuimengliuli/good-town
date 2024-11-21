@@ -17,7 +17,7 @@ const InitLayout: React.FC<
 > = ({ children }) => {
   const dispatch = useDispatch<AppDispatch>();
   const doInitLoginUser = useCallback(async () => {
-    dispatch(setLoginUser(DEFAULT_USER));\
+    dispatch(setLoginUser(DEFAULT_USER));
     // todo 全局初始化暂时关闭
     // const res = await getLoginUserUsingGet();
     // if (res.data) {
