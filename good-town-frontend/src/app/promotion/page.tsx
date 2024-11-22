@@ -1,6 +1,7 @@
 "use client";
 import { Card, Col, Row } from "antd";
 import { useState } from "react";
+import PromotionPublish from "@/app/promotion/components/PromotionPublish";
 
 /**
  * 我宣传页面
@@ -29,7 +30,7 @@ const PromotionPage: React.FC = () => {
               setActiveTabKey(key);
             }}
           >
-            {activeTabKey === "publish" && <>aaa</>}
+              {activeTabKey === "publish" && <><PromotionPublish></PromotionPublish></>}
             {activeTabKey === "select" && <>bbb</>}
           </Card>
         </Col>
