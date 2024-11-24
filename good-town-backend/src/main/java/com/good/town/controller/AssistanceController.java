@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 助力服务接口
@@ -235,4 +236,11 @@ public class AssistanceController {
     }
 
     // endregion
+
+    @GetMapping("/get/count")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<List<Integer>> getAssistanceUserCount(Integer year, HttpServletRequest request) {
+        List<Integer> assistanceUserCountList = assistanceService.getUserCount(year);
+        return ResultUtils.success(assistanceUserCountList);
+    }
 }

@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -163,4 +165,17 @@ public class PromotionServiceImpl extends ServiceImpl<PromotionMapper, Promotion
         return promotionVOPage;
     }
 
+    @Override
+    public List<Integer> getUserCount(Integer year) {
+        if (year == null) {
+            year = LocalDate.now().getYear();
+            return null;
+        }
+        List<Integer> list = new ArrayList<>();
+        for (int month = 1; month <= 12; month++) {
+            Integer count = baseMapper.countByCreateTime(year, month);
+            list.add(count == null ? 0 : count);
+        }
+        return list;
+    }
 }

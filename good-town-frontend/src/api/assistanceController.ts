@@ -47,6 +47,21 @@ export async function editAssistanceUsingPost(
   });
 }
 
+/** getAssistanceUserCount GET /api/assistance/get/count */
+export async function getAssistanceUserCountUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getAssistanceUserCountUsingGETParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseListInt_>("/api/assistance/get/count", {
+    method: "GET",
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 /** getAssistanceVOById GET /api/assistance/get/vo */
 export async function getAssistanceVoByIdUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

@@ -24,6 +24,7 @@ const PromotionPublish= () => {
             layout="horizontal"
             onFinish={async (values) => {
                 try {
+                    console.log(values);
                     const res = addPromotionUsingPost(values);
                     if (res.data) {
                         message.success("发布宣传成功");

@@ -25,4 +25,10 @@
         picture,video,state,
         createTime,updateTime,isDelete
     </sql>
+
+    <select id="countByCreateTime" resultType="java.lang.Integer">
+        SELECT COUNT(distinct userId) FROM promotion
+        WHERE YEAR(createTime) = #{year} AND MONTH(createTime) = #{month}
+    </select>
+
 </mapper>

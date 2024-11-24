@@ -67,6 +67,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseListInt_ = {
+    code?: number;
+    data?: number[];
+    message?: string;
+  };
+
   type BaseResponseLoginUserVO_ = {
     code?: number;
     data?: LoginUserVO;
@@ -155,9 +161,19 @@ declare namespace API {
     id?: number;
   };
 
+  type getAssistanceUserCountUsingGETParams = {
+    /** year */
+    year?: number;
+  };
+
   type getAssistanceVOByIdUsingGETParams = {
     /** id */
     id?: number;
+  };
+
+  type getPromotionUserCountUsingGETParams = {
+    /** year */
+    year?: number;
   };
 
   type getPromotionVOByIdUsingGETParams = {
@@ -178,6 +194,21 @@ declare namespace API {
   type getUserVOByIdUsingGETParams = {
     /** id */
     id?: number;
+  };
+
+  type listMyPromotionVOByPageUsingPOSTParams = {
+    current?: number;
+    description?: string;
+    id?: number;
+    notId?: number;
+    pageSize?: number;
+    searchText?: string;
+    sortField?: string;
+    sortOrder?: string;
+    themeName?: string;
+    townId?: number;
+    type?: string;
+    userId?: number;
   };
 
   type LoginUserVO = {
@@ -322,19 +353,19 @@ declare namespace API {
 
   type PromotionAddRequest = {
     description?: string;
-    picture?: string;
+    picture?: string[];
     themeName?: string;
     type?: string;
-    video?: string;
+    video?: string[];
   };
 
   type PromotionEditRequest = {
     description?: string;
     id?: number;
-    picture?: string;
+    picture?: string[];
     themeName?: string;
     type?: string;
-    video?: string;
+    video?: string[];
   };
 
   type PromotionQueryRequest = {

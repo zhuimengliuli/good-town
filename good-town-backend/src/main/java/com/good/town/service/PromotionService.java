@@ -8,6 +8,7 @@ import com.good.town.model.entity.Promotion;
 import com.good.town.model.vo.PromotionVO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 宣传服务服务
@@ -49,4 +50,11 @@ public interface PromotionService extends IService<Promotion> {
      * @return
      */
     Page<PromotionVO> getPromotionVOPage(Page<Promotion> promotionPage, HttpServletRequest request);
+
+    /**
+     * 获取用户数量
+     * @param year
+     * @return
+     */
+    List<Integer> getUserCount(Integer year);
 }

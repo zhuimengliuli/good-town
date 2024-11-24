@@ -47,6 +47,21 @@ export async function editPromotionUsingPost(
   });
 }
 
+/** getPromotionUserCount GET /api/promotion/get/count */
+export async function getPromotionUserCountUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getPromotionUserCountUsingGETParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseListInt_>("/api/promotion/get/count", {
+    method: "GET",
+    params: {
+      ...params,
+    },
+    ...(options || {}),
+  });
+}
+
 /** getPromotionVOById GET /api/promotion/get/vo */
 export async function getPromotionVoByIdUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
@@ -97,17 +112,17 @@ export async function listPromotionVoByPageUsingPost(
 
 /** listMyPromotionVOByPage POST /api/promotion/my/list/page/vo */
 export async function listMyPromotionVoByPageUsingPost(
-  body: API.PromotionQueryRequest,
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.listMyPromotionVOByPageUsingPOSTParams,
   options?: { [key: string]: any }
 ) {
   return request<API.BaseResponsePagePromotionVO_>(
     "/api/promotion/my/list/page/vo",
     {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+      params: {
+        ...params,
       },
-      data: body,
       ...(options || {}),
     }
   );

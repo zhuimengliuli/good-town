@@ -36,11 +36,11 @@ public class PromotionEditRequest implements Serializable {
     /**
      * 图片
      */
-    private String picture;
+    private List<String> picture;
 
     /**
      * 视频
      */
-    private String video;
+    private List<String> video;
     private static final long serialVersionUID = 1L;
 }

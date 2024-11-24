@@ -8,6 +8,7 @@ import com.good.town.model.entity.Assistance;
 import com.good.town.model.vo.AssistanceVO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 助力服务服务
@@ -49,4 +50,10 @@ public interface AssistanceService extends IService<Assistance> {
      * @return
      */
     Page<AssistanceVO> getAssistanceVOPage(Page<Assistance> assistancePage, HttpServletRequest request);
+    /**
+     * 获取用户数量
+     * @param year
+     * @return
+     */
+    List<Integer> getUserCount(Integer year);
 }

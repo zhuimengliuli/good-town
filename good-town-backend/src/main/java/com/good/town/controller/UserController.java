@@ -59,7 +59,9 @@ public class UserController {
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
             return null;
         }
-        long result = userService.userRegister(userAccount, userPassword, checkPassword);
+        User user = new User();
+        BeanUtils.copyProperties(userRegisterRequest, user);
+        long result = userService.userRegister(user, checkPassword);
         return ResultUtils.success(result);
     }
 

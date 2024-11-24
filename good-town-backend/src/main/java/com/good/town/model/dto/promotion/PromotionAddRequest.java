@@ -26,12 +26,12 @@ public class PromotionAddRequest implements Serializable {
     /**
      * 图片
      */
-    private String picture;
+    private List<String> picture;
 
     /**
      * 视频
      */
-    private String video;
+    private List<String> video;
 
     /**
      * 宣传类型

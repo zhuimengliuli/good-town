@@ -1,12 +1,13 @@
 "use client";
-import {LockOutlined, UserOutlined} from "@ant-design/icons";
-import {LoginForm, ProForm, ProFormText} from "@ant-design/pro-components";
+import {IdcardOutlined, LockOutlined, PhoneOutlined, UserOutlined} from "@ant-design/icons";
+import {LoginForm, ProForm, ProFormSelect, ProFormText} from "@ant-design/pro-components";
 import {Image, message} from "antd";
 import {userRegisterUsingPost} from "@/api/userController";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "@/stores";
 import {useRouter} from "next/navigation";
 import Link from "next/link";
+import React from "react";
 
 /**
  * 用户注册界面
@@ -19,7 +20,7 @@ const UserRegisterPage: React.FC = (props) => {
   const router = useRouter();
   const doSubmit = async (values: any) => {
     try {
-      const res = await userRegisterUsingPost(values);;
+      const res = await userRegisterUsingPost(values);
       if (res.data) {
         message.success("注册成功");
         router.push("/user/login");
@@ -36,6 +37,11 @@ const UserRegisterPage: React.FC = (props) => {
         title="好乡镇 - 用户注册"
         subTitle="开发网站"
         onFinish={doSubmit}
+        submitter={{
+            searchConfig: {
+                submitText: "注册",
+            },
+        }}
       >
         <ProFormText
           name="userAccount"
@@ -66,7 +72,7 @@ const UserRegisterPage: React.FC = (props) => {
           ]}
         />
         <ProFormText.Password
-            name="userCheckPassword"
+            name="checkPassword"
             fieldProps={{
               size: "large",
               prefix: <LockOutlined />,
@@ -79,6 +85,76 @@ const UserRegisterPage: React.FC = (props) => {
               },
             ]}
         />
+          <ProFormText
+              name="userName"
+              fieldProps={{
+                  size: "large",
+                  prefix: <UserOutlined />,
+              }}
+              placeholder={"请输入姓名"}
+              rules={[
+                  {
+                      required: true,
+                      message: "请输入姓名!",
+                  },
+              ]}
+          />
+          <ProFormText
+              name="userIDCard"
+              fieldProps={{
+                  size: "large",
+                  prefix: <IdcardOutlined />,
+              }}
+              placeholder={"请输入证件号码"}
+              rules={[
+                  {
+                      required: true,
+                      message: "请输入证件号码！",
+                  },
+              ]}
+          />
+          <ProFormSelect
+              name="userIDCardType"
+              fieldProps={{
+                  size: "large",
+                  prefix: <IdcardOutlined />,
+              }}
+              placeholder={"请选择证件类型"}
+              rules={[
+                  {
+                      required: true,
+                      message: "请选择证件类型！",
+                  },
+              ]}
+              options={[
+                  {
+                      value: "身份证",
+                      label: "身份证",
+                  },
+                  {
+                      value: "护照",
+                      label: "护照",
+                  },
+                  {
+                      value: "港澳通行证",
+                      label: "港澳通行证",
+                  },
+              ]}
+          />
+          <ProFormText
+              name="phone"
+              fieldProps={{
+                  size: "large",
+                  prefix: <PhoneOutlined />,
+              }}
+              placeholder={"请输入电话"}
+              rules={[
+                  {
+                      required: true,
+                      message: "请输入电话!",
+                  },
+              ]}
+          />
         <div
           style={{
             marginBlockEnd: 24,
