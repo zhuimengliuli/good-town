@@ -23,6 +23,7 @@ const PromotionPublish= () => {
         <ProForm<API.PromotionAddRequest>
             layout="horizontal"
             onFinish={async (values) => {
+                console.log('Form values:', values); // 添加日志记录
                 try {
                     const res = addPromotionUsingPost(values);
                     if (res.data) {

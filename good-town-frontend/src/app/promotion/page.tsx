@@ -2,6 +2,7 @@
 import { Card, Col, Row } from "antd";
 import { useState } from "react";
 import PromotionPublish from "@/app/promotion/components/PromotionPublish";
+import MyPublish from "@/app/promotion/components/MyPublish";
 
 /**
  * 我宣传页面
@@ -31,7 +32,7 @@ const PromotionPage: React.FC = () => {
             }}
           >
               {activeTabKey === "publish" && <><PromotionPublish></PromotionPublish></>}
-            {activeTabKey === "select" && <>bbb</>}
+            {activeTabKey === "select" && <><MyPublish></MyPublish></>}
           </Card>
         </Col>
       </Row>
