@@ -137,4 +137,10 @@ public class TownServiceImpl extends ServiceImpl<TownMapper, Town> implements To
         return townVOPage;
     }
 
+    @Override
+    public Town getTownByName(String name) {
+
+        return null;
+    }
+
 }

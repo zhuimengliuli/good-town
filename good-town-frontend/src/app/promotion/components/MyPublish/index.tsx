@@ -13,7 +13,7 @@ import {
     ProFormTextArea,
     ProFormUploadButton,
     ProFormUploadDragger,
-    PageContainer
+    PageContainer, ProFormCascader
 } from "@ant-design/pro-components";
 import React, { useState }  from "react";
 import { addPromotionUsingPost } from "@/api/promotionController";
@@ -100,7 +100,7 @@ const Content2 = () => (
                     },
                     {
                         value: "自然风光秀丽",
-                        label: "护照",
+                        label: "自然风光秀丽",
                     },
                     {
                         value: "古建筑",
@@ -125,14 +125,15 @@ const Content2 = () => (
                 name="description"
                 label="宣传描述"
             />
-            <ProFormUploadButton
-                name="picture"
-                label="图片"
-            />
-            <ProFormUploadDragger
-                name="video"
-                label="视频"
-            />
+
+            {/*<ProFormUploadButton*/}
+            {/*    name="picture"*/}
+            {/*    label="图片"*/}
+            {/*/>*/}
+            {/*<ProFormUploadDragger*/}
+            {/*    name="video"*/}
+            {/*    label="视频"*/}
+            {/*/>*/}
         </ProForm>
     );
 
