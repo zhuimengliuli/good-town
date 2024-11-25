@@ -25,6 +25,7 @@ const PromotionPublish= () => {
             onFinish={async (values) => {
                 console.log('Form values:', values); // 添加日志记录
                 try {
+                    console.log(values);
                     const res = addPromotionUsingPost(values);
                     if (res.data) {
                         message.success("发布宣传成功");

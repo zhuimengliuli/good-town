@@ -45,12 +45,12 @@ public class Promotion implements Serializable {
     private String description;
 
     /**
-     * 图片
+     * 图片（JSON数组）
      */
     private String picture;
 
     /**
-     * 视频
+     * 视频（JSON数组）
      */
     private String video;
 

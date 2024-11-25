@@ -1,5 +1,6 @@
 package com.good.town.controller;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.good.town.annotation.AuthCheck;
 import com.good.town.common.BaseResponse;
@@ -9,10 +10,7 @@ import com.good.town.common.ResultUtils;
 import com.good.town.constant.UserConstant;
 import com.good.town.exception.BusinessException;
 import com.good.town.exception.ThrowUtils;
-import com.good.town.model.dto.promotion.PromotionAddRequest;
-import com.good.town.model.dto.promotion.PromotionEditRequest;
-import com.good.town.model.dto.promotion.PromotionQueryRequest;
-import com.good.town.model.dto.promotion.PromotionUpdateRequest;
+import com.good.town.model.dto.promotion.*;
 import com.good.town.model.entity.Promotion;
 import com.good.town.model.entity.User;
 import com.good.town.model.vo.PromotionVO;
@@ -24,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 宣传服务接口
@@ -56,6 +55,14 @@ public class PromotionController {
         // todo 在此处将实体类和 DTO 进行转换
         Promotion promotion = new Promotion();
         BeanUtils.copyProperties(promotionAddRequest, promotion);
+        List<String> picture = promotionAddRequest.getPicture();
+        List<String> video = promotionAddRequest.getVideo();
+        if (picture != null) {
+            promotion.setPicture(JSONUtil.toJsonStr(picture));
+        }
+        if (video != null) {
+            promotion.setVideo(JSONUtil.toJsonStr(video));
+        }
         // 数据校验
         promotionService.validPromotion(promotion, true);
         // todo 填充默认值
@@ -185,7 +192,7 @@ public class PromotionController {
      * @return
      */
     @PostMapping("/my/list/page/vo")
-    public BaseResponse<Page<PromotionVO>> listMyPromotionVOByPage(@RequestBody PromotionQueryRequest promotionQueryRequest,
+    public BaseResponse<Page<PromotionVO>> listMyPromotionVOByPage(PromotionQueryRequest promotionQueryRequest,
                                                                  HttpServletRequest request) {
         ThrowUtils.throwIf(promotionQueryRequest == null, ErrorCode.PARAMS_ERROR);
         // 补充查询条件，只查询当前登录用户的数据
@@ -235,4 +242,11 @@ public class PromotionController {
     }
 
     // endregion
+
+    @GetMapping("/get/count")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<List<Integer>> getPromotionUserCount(Integer year, HttpServletRequest request) {
+        List<Integer> promotionUserCountList = promotionService.getUserCount(year);
+        return ResultUtils.success(promotionUserCountList);
+    }
 }

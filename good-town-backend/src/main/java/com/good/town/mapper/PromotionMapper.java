@@ -2,6 +2,9 @@ package com.good.town.mapper;
 
 import com.good.town.model.entity.Promotion;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author 未央
@@ -11,6 +14,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface PromotionMapper extends BaseMapper<Promotion> {
 
+    Integer countByCreateTime(Integer year, Integer month);
 }
 
 

@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity com.good.town.model.entity.Assistance
 */
 public interface AssistanceMapper extends BaseMapper<Assistance> {
-
+    Integer countByCreateTime(Integer year, Integer month);
 }
 
 
