@@ -15,9 +15,11 @@ import {
     ProFormUploadDragger,
     PageContainer
 } from "@ant-design/pro-components";
-import React, { useState }  from "react";
-import { addPromotionUsingPost } from "@/api/promotionController";
+import React, { useState, useEffect }  from "react";
+import { addPromotionUsingPost, listMyPromotionVoByPageUsingPost } from "@/api/promotionController";
 import type { PopconfirmProps } from 'antd';
+import PromotionVO = API.PromotionVO;
+import { current } from "@reduxjs/toolkit";
 
 /**
  * 我的宣传
@@ -52,7 +54,8 @@ const data = [
 ];
 
 const confirm: PopconfirmProps['onConfirm'] = (e) => {
-  console.log(e);
+    console.log(e);
+    
   message.success('Click on Yes');
 };
 
@@ -136,7 +139,25 @@ const Content2 = () => (
         </ProForm>
     );
 
+
 const MyPublish: React.FC = () => {
+    // const [myPromotionList, setMyPromotionList] = useState<PromotionVO[]>();
+    let myPromotionList = undefined;
+    const fetchMyPromotionList = async (pageSize: number) => {
+        try {
+            const myGetPromotionList = await listMyPromotionVoByPageUsingPost({pageSize : pageSize});
+            // console.log(myGetPromotionList.data.records);
+            // setMyPromotionList(myGetPromotionList.data);
+            myPromotionList = myGetPromotionList.data.records;
+        } catch (e: any) {
+            message.error('获取宣传信息失败' + e.message());
+        }
+        console.log(myPromotionList)
+    }
+    useEffect(() => {
+        fetchMyPromotionList(15);
+    }, []);
+
     const [open, setOpen] = useState(false);
 
     const onClose = () => {
@@ -204,27 +225,21 @@ const MyPublish: React.FC = () => {
     <div>
             <Paragraph>
                 <h3>
-                    宣传标题
+                    {myPromotionList?.[currentPage - 1].themeName ?? '暂无数据' } 
                 </h3>
                 <h5>
-                    宣传类型
+                    {myPromotionList?.[currentPage - 1].type ?? '暂无数据' } 
                 </h5>
                 <p>
-                    宣传描述
+                    {myPromotionList?.[currentPage - 1].description ?? '暂无数据' } 
                 </p>
                 
                 <Carousel>
                     <div>
-                        <h3 style={contentStyle}>图片1</h3>
+                        <h3 style={contentStyle}>{myPromotionList?.[currentPage - 1].picture ?? '暂无数据' } </h3>
                     </div>
                     <div>
-                        <h3 style={contentStyle}>视频2</h3>
-                    </div>
-                    <div>
-                        <h3 style={contentStyle}>3</h3>
-                    </div>
-                    <div>
-                        <h3 style={contentStyle}>4</h3>
+                        <h3 style={contentStyle}>{myPromotionList?.[currentPage - 1].video ?? '暂无数据' } </h3>
                     </div>
                 </Carousel>
         
@@ -254,18 +269,7 @@ const MyPublish: React.FC = () => {
 
     );
 
-
-    const fetchUserCountList = async (pageSize: number) => {
-        try {
-            const myPromotionList = await listMyPromotionVoByPageUsingPost({pageSize : pageSize});
-            setPromotionUserCountList(myPromotionList.data);
-        } catch (e: any) {
-            message.error('获取宣传信息失败' + e.message());
-        }
-    }
-    useEffect(() => {
-        fetchUserCountList(year);
-    }, []);
+    
 
     return (
 
