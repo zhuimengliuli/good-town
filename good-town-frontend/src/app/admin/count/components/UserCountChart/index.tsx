@@ -30,7 +30,6 @@ const UserCountChart= () => {
     useEffect(() => {
         fetchUserCountList(year);
     }, []);
-
     const option = {
         title: {
             text: '数据统计'

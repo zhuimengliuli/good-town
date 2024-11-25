@@ -57,7 +57,6 @@ public class TownController {
         if (townUpdateRequest == null || townUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        // todo 在此处将实体类和 DTO 进行转换
         Town town = new Town();
         BeanUtils.copyProperties(townUpdateRequest, town);
         // 数据校验

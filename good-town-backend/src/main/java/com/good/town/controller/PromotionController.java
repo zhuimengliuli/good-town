@@ -52,7 +52,6 @@ public class PromotionController {
     @PostMapping("/add")
     public BaseResponse<Long> addPromotion(@RequestBody PromotionAddRequest promotionAddRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(promotionAddRequest == null, ErrorCode.PARAMS_ERROR);
-        // todo 在此处将实体类和 DTO 进行转换
         Promotion promotion = new Promotion();
         BeanUtils.copyProperties(promotionAddRequest, promotion);
         List<String> picture = promotionAddRequest.getPicture();
@@ -65,7 +64,6 @@ public class PromotionController {
         }
         // 数据校验
         promotionService.validPromotion(promotion, true);
-        // todo 填充默认值
         User loginUser = userService.getLoginUser(request);
         promotion.setUserId(loginUser.getId());
         // 写入数据库
@@ -115,7 +113,6 @@ public class PromotionController {
         if (promotionUpdateRequest == null || promotionUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        // todo 在此处将实体类和 DTO 进行转换
         Promotion promotion = new Promotion();
         BeanUtils.copyProperties(promotionUpdateRequest, promotion);
         // 数据校验
@@ -221,7 +218,6 @@ public class PromotionController {
         if (promotionEditRequest == null || promotionEditRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        // todo 在此处将实体类和 DTO 进行转换
         Promotion promotion = new Promotion();
         BeanUtils.copyProperties(promotionEditRequest, promotion);
         // 数据校验

@@ -53,8 +53,8 @@ const PromotionUserCountTable = () => {
       dataSource={promotionUserCountListTable}
       pagination={false}
     >
-      <Column title="Month" dataIndex="month" key="month" />
-      <Column title="Count" dataIndex="count" key="count" />
+      <Column title="月份" dataIndex="month" key="month" />
+      <Column title="人数" dataIndex="count" key="count" />
     </Table>
   );
 };
