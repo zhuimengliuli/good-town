@@ -4,7 +4,7 @@ import {
     Col, message, Row,
     Space, Carousel, Segmented,
     Button, Typography, Drawer,
-    List, Skeleton, Popconfirm, Card
+    List, Pagination, Popconfirm
 } from "antd";
 import {
     ProForm,
@@ -143,8 +143,8 @@ const MyPublish: React.FC = () => {
         setOpen(false);
     };
 
-    const [initLoading, setInitLoading] = useState(true);
-    const [loading, setLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const handlePageChange = (page: number) => { setCurrentPage(page); };
 
 
     const ListTypeAssistMsg = () => (
@@ -190,7 +190,7 @@ const MyPublish: React.FC = () => {
         } setOpen(true);
     };
 
-    const [currentSegment, setCurrentSegment] = useState('Segment 1');
+    const [currentSegment, setCurrentSegment] = useState('查看');
     const handleSegmentChange = (value: string) => { setCurrentSegment(value); };
     const renderContent = () => {
         switch (currentSegment) {
@@ -254,8 +254,22 @@ const MyPublish: React.FC = () => {
 
     );
 
+
+    const fetchUserCountList = async (pageSize: number) => {
+        try {
+            const myPromotionList = await listMyPromotionVoByPageUsingPost({pageSize : pageSize});
+            setPromotionUserCountList(myPromotionList.data);
+        } catch (e: any) {
+            message.error('获取宣传信息失败' + e.message());
+        }
+    }
+    useEffect(() => {
+        fetchUserCountList(year);
+    }, []);
+
     return (
 
+        
         <PageContainer>
             
             <Segmented 
@@ -267,8 +281,14 @@ const MyPublish: React.FC = () => {
                 {renderContent()} 
             </div>
 
+            <Pagination
+                current={currentPage}
+                pageSize={1} total={3}
+                onChange={handlePageChange}
+                style={{ marginTop: 16 }} />
             
-            </PageContainer>
+        </PageContainer>
+
     );
 };
 export default MyPublish;
