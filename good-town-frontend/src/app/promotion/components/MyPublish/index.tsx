@@ -16,7 +16,11 @@ import {
     PageContainer
 } from "@ant-design/pro-components";
 import React, { useState, useEffect }  from "react";
-import { addPromotionUsingPost, listMyPromotionVoByPageUsingPost } from "@/api/promotionController";
+import {
+    editPromotionUsingPost,
+    listMyPromotionVoByPageUsingPost,
+    deletePromotionUsingPost
+} from "@/api/promotionController";
 import type { PopconfirmProps } from 'antd';
 import PromotionVO = API.PromotionVO;
 import { current } from "@reduxjs/toolkit";
@@ -53,110 +57,36 @@ const data = [
   },
 ];
 
-const confirm: PopconfirmProps['onConfirm'] = (e) => {
-    console.log(e);
-    
-  message.success('Click on Yes');
-};
-
-
-const Content2 = () => (
-        <ProForm<API.PromotionAddRequest>
-            layout="horizontal"
-            onFinish={async (values) => {
-                console.log('Form values:', values); // 添加日志记录
-                try {
-                    const res = addPromotionUsingPost(values);
-                    if (res.data) {
-                        message.success("编辑宣传成功");
-                    }
-                } catch (e: any) {
-                    message.error("编辑宣传失败，" + e.message);
-                }
-            }}
-            submitter={{
-                render: (props, doms) => {
-                    return  (
-                        <Row>
-                            <Col span={14} offset={4}>
-                                <Space>{doms}</Space>
-                            </Col>
-                        </Row>
-                    );
-                },
-            }}
-            autoFocusFirstInput
-        >
-            <ProFormText
-                width="md"
-                name="themeName"
-                label="宣传主题名称"
-            />
-            <ProFormSelect
-                name="type"
-                label="宣传类型"
-                width="md"
-                options={[
-                    {
-                        value: "农家院",
-                        label: "农家院",
-                    },
-                    {
-                        value: "自然风光秀丽",
-                        label: "护照",
-                    },
-                    {
-                        value: "古建筑",
-                        label: "古建筑",
-                    },
-                    {
-                        value: "土特产",
-                        label: "土特产",
-                    },
-                    {
-                        value: "特色小吃",
-                        label: "特色小吃",
-                    },
-                    {
-                        value: "民宿活动",
-                        label: "民宿活动",
-                    },
-                ]}
-            />
-            <ProFormTextArea
-                colProps={{ span: 24 }}
-                name="description"
-                label="宣传描述"
-            />
-            <ProFormUploadButton
-                name="picture"
-                label="图片"
-            />
-            <ProFormUploadDragger
-                name="video"
-                label="视频"
-            />
-        </ProForm>
-    );
 
 
 const MyPublish: React.FC = () => {
-    // const [myPromotionList, setMyPromotionList] = useState<PromotionVO[]>();
-    let myPromotionList = undefined;
+    const [myPromotionList, setMyPromotionList] = useState<PromotionVO[]>();
     const fetchMyPromotionList = async (pageSize: number) => {
         try {
             const myGetPromotionList = await listMyPromotionVoByPageUsingPost({pageSize : pageSize});
-            // console.log(myGetPromotionList.data.records);
-            // setMyPromotionList(myGetPromotionList.data);
-            myPromotionList = myGetPromotionList.data.records;
+            setMyPromotionList(myGetPromotionList.data.records);
         } catch (e: any) {
             message.error('获取宣传信息失败' + e.message());
         }
-        console.log(myPromotionList)
     }
     useEffect(() => {
         fetchMyPromotionList(15);
     }, []);
+
+    const confirm: PopconfirmProps['onConfirm'] = async (e) => {
+        console.log(e);
+        
+        try {
+            const res = await deletePromotionUsingPost({id : myPromotionList?.[currentPage - 1].id});
+            if (res.data) {
+                message.success('删除成功');
+                fetchMyPromotionList(15);
+            }
+
+        } catch (e: any) {
+            message.error('删除失败' + e.message());
+        }
+    };
 
     const [open, setOpen] = useState(false);
 
@@ -225,21 +155,21 @@ const MyPublish: React.FC = () => {
     <div>
             <Paragraph>
                 <h3>
-                    {myPromotionList?.[currentPage - 1].themeName ?? '暂无数据' } 
+                    {myPromotionList?.[currentPage - 1].themeName ?? '暂无数据'}
                 </h3>
                 <h5>
-                    {myPromotionList?.[currentPage - 1].type ?? '暂无数据' } 
+                    {myPromotionList?.[currentPage - 1].type ?? '暂无数据'}
                 </h5>
                 <p>
-                    {myPromotionList?.[currentPage - 1].description ?? '暂无数据' } 
+                    {myPromotionList?.[currentPage - 1].description ?? '暂无数据'}
                 </p>
                 
                 <Carousel>
                     <div>
-                        <h3 style={contentStyle}>{myPromotionList?.[currentPage - 1].picture ?? '暂无数据' } </h3>
+                        <h3 style={contentStyle}>{myPromotionList?.[currentPage - 1].picture ?? '暂无数据'} </h3>
                     </div>
                     <div>
-                        <h3 style={contentStyle}>{myPromotionList?.[currentPage - 1].video ?? '暂无数据' } </h3>
+                        <h3 style={contentStyle}>{myPromotionList?.[currentPage - 1].video ?? '暂无数据'} </h3>
                     </div>
                 </Carousel>
         
@@ -250,8 +180,8 @@ const MyPublish: React.FC = () => {
                     title="删除"
                     description="确定删除这个宣传吗？"
                     onConfirm={confirm}
-                    okText="Yes"
-                    cancelText="No"
+                    okText="确定"
+                    cancelText="取消"
                 >
                     <Button danger>删除</Button>
                 </Popconfirm>
@@ -270,9 +200,90 @@ const MyPublish: React.FC = () => {
     );
 
     
+    const Content2 = () => (
+        <ProForm<API.PromotionEditRequest>
+            layout="horizontal"
+            onFinish={async (values) => {
+                values.id = myPromotionList?.[currentPage - 1].id;
+                console.log('Form values:', values); // 添加日志记录
+                try {
+                    const res = editPromotionUsingPost(values);
+                    if (res.data) {
+                        message.success("编辑宣传成功");
+                    }
+                } catch (e: any) {
+                    message.error("编辑宣传失败，" + e.message);
+                }
+            }}
+            submitter={{
+                render: (props, doms) => {
+                    return  (
+                        <Row>
+                            <Col span={14} offset={4}>
+                                <Space>{doms}</Space>
+                            </Col>
+                        </Row>
+                    );
+                },
+            }}
+            autoFocusFirstInput
+        >
+            <ProFormText
+                width="md"
+                name="themeName"
+                label="宣传主题名称"
+                initialValue={myPromotionList?.[currentPage - 1].themeName ?? '暂无数据'}
+            />
+            <ProFormSelect
+                name="type"
+                label="宣传类型"
+                width="md"
+                options={[
+                    {
+                        value: "农家院",
+                        label: "农家院",
+                    },
+                    {
+                        value: "自然风光秀丽",
+                        label: "护照",
+                    },
+                    {
+                        value: "古建筑",
+                        label: "古建筑",
+                    },
+                    {
+                        value: "土特产",
+                        label: "土特产",
+                    },
+                    {
+                        value: "特色小吃",
+                        label: "特色小吃",
+                    },
+                    {
+                        value: "民宿活动",
+                        label: "民宿活动",
+                    },
+                ]}
+            />
+            <ProFormTextArea
+                colProps={{ span: 24 }}
+                name="description"
+                label="宣传描述"
+                initialValue={myPromotionList?.[currentPage - 1].description ?? '暂无数据'}
+
+            />
+            <ProFormUploadButton
+                name="picture"
+                label="图片"
+            />
+            <ProFormUploadDragger
+                name="video"
+                label="视频"
+            />
+        </ProForm>
+    );
 
     return (
-
         
         <PageContainer>
             
@@ -287,7 +298,7 @@ const MyPublish: React.FC = () => {
 
             <Pagination
                 current={currentPage}
-                pageSize={1} total={3}
+                pageSize={1} total={myPromotionList?.length}
                 onChange={handlePageChange}
                 style={{ marginTop: 16 }} />
             

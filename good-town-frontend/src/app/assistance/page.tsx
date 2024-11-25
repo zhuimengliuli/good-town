@@ -1,6 +1,10 @@
 "use client";
-import {Card, Col, Row, List} from "antd";
-import {useState} from "react";
+import {Card, Col, Row, List, message} from "antd";
+import { useState, useEffect  } from "react";
+import AssistanceVO = API.AssistanceVO;
+import {
+    listMyAssistanceVoByPageUsingPost
+} from "@/api/assistanceController";
 
 /**
  * 我助力界面
@@ -26,10 +30,28 @@ const ListType2 = () => (
                 >
                     {item}
                 </List.Item>)} />);
-const ListType3 = () => (
+
+
+const AssistancePage: React.FC = () => {
+    const [activeTabKey, setActiveTabKey] = useState<string>("publish");
+
+    const [myAssistanceList, setMyAssistanceList] = useState<AssistanceVO[]>();
+    const fetchMyAssistanceList = async (pageSize: number) => {
+        try {
+            const myGetAssistanceList = await listMyAssistanceVoByPageUsingPost({pageSize : pageSize});
+            setMyAssistanceList(myGetAssistanceList.data.records);
+        } catch (e: any) {
+            message.error('获取宣传信息失败' + e.message());
+        }
+    }
+    useEffect(() => {
+        fetchMyAssistanceList(15);
+    }, []);
+
+    const ListType3 = () => (
     <List 
         itemLayout="vertical"
-        dataSource={[{ title: 'Title 1', content: 'Content 1' }, { title: 'Title 2', content: 'Content 2' }, { title: 'Title 3', content: 'Content 3' },]}
+        dataSource={myAssistanceList}
         renderItem={item => (
             <List.Item
                     actions={[<a key="list-loadmore-edit">助力</a>]}
@@ -40,10 +62,9 @@ const ListType3 = () => (
             </List.Item>
 
         )} 
-            />);
+    />);
 
-const AssistancePage: React.FC = () => {
-    const [activeTabKey, setActiveTabKey] = useState<string>("publish");
+
     return (
         <div>
             <Row gutter={[0, 16]}>
