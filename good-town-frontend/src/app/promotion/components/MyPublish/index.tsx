@@ -13,7 +13,7 @@ import {
     ProFormTextArea,
     ProFormUploadButton,
     ProFormUploadDragger,
-    PageContainer
+    PageContainer, ProFormCascader
 } from "@ant-design/pro-components";
 import React, { useState, useEffect }  from "react";
 import {
@@ -58,6 +58,86 @@ const data = [
 ];
 
 
+
+const Content2 = () => (
+        <ProForm<API.PromotionAddRequest>
+            layout="horizontal"
+            onFinish={async (values) => {
+                console.log('Form values:', values); // 添加日志记录
+                try {
+                    const res = addPromotionUsingPost(values);
+                    if (res.data) {
+                        message.success("编辑宣传成功");
+                    }
+                } catch (e: any) {
+                    message.error("编辑宣传失败，" + e.message);
+                }
+            }}
+            submitter={{
+                render: (props, doms) => {
+                    return  (
+                        <Row>
+                            <Col span={14} offset={4}>
+                                <Space>{doms}</Space>
+                            </Col>
+                        </Row>
+                    );
+                },
+            }}
+            autoFocusFirstInput
+        >
+            <ProFormText
+                width="md"
+                name="themeName"
+                label="宣传主题名称"
+            />
+            <ProFormSelect
+                name="type"
+                label="宣传类型"
+                width="md"
+                options={[
+                    {
+                        value: "农家院",
+                        label: "农家院",
+                    },
+                    {
+                        value: "自然风光秀丽",
+                        label: "自然风光秀丽",
+                    },
+                    {
+                        value: "古建筑",
+                        label: "古建筑",
+                    },
+                    {
+                        value: "土特产",
+                        label: "土特产",
+                    },
+                    {
+                        value: "特色小吃",
+                        label: "特色小吃",
+                    },
+                    {
+                        value: "民宿活动",
+                        label: "民宿活动",
+                    },
+                ]}
+            />
+            <ProFormTextArea
+                colProps={{ span: 24 }}
+                name="description"
+                label="宣传描述"
+            />
+
+            {/*<ProFormUploadButton*/}
+            {/*    name="picture"*/}
+            {/*    label="图片"*/}
+            {/*/>*/}
+            {/*<ProFormUploadDragger*/}
+            {/*    name="video"*/}
+            {/*    label="视频"*/}
+            {/*/>*/}
+        </ProForm>
+    );
 
 const MyPublish: React.FC = () => {
     const [myPromotionList, setMyPromotionList] = useState<PromotionVO[]>();

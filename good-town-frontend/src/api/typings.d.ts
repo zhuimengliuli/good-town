@@ -355,6 +355,7 @@ declare namespace API {
     description?: string;
     picture?: string[];
     themeName?: string;
+    townName?: string;
     type?: string;
     video?: string[];
   };
@@ -393,7 +394,7 @@ declare namespace API {
     id?: number;
     picture?: string;
     themeName?: string;
-    townId?: number;
+    townName?: string;
     type?: string;
     updateTime?: string;
     user?: UserVO;

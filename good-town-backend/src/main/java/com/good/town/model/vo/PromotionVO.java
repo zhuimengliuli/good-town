@@ -28,9 +28,9 @@ public class PromotionVO implements Serializable {
     private Long userId;
 
     /**
-     * 乡镇id
+     * 乡镇名
      */
-    private Long townId;
+    private String townName;
 
     /**
      * 宣传类型

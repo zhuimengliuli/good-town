@@ -49,4 +49,11 @@ public interface TownService extends IService<Town> {
      * @return
      */
     Page<TownVO> getTownVOPage(Page<Town> townPage, HttpServletRequest request);
+
+    /**
+     * 根据名称获取乡镇
+     * @param name
+     * @return
+     */
+    Town getTownByName(String name);
 }

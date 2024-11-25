@@ -38,7 +38,10 @@ public class PromotionAddRequest implements Serializable {
      */
     private String type;
 
-
+    /**
+     * 乡镇
+     */
+    private String townName;
 
     private static final long serialVersionUID = 1L;
 }

@@ -1,23 +1,26 @@
 "use client";
 
-import {Col, message, Row, Space} from "antd";
-import {
-    ProForm,
-    ProFormSelect,
-    ProFormText,
-    ProFormTextArea,
-    ProFormUploadButton,
-    ProFormUploadDragger
-} from "@ant-design/pro-components";
 import React from "react";
+import {Props} from "next/script";
+import {
+  ProForm, ProFormCascader,
+  ProFormSelect,
+  ProFormText,
+  ProFormTextArea,
+  ProFormUploadButton,
+  ProFormUploadDragger
+} from "@ant-design/pro-components";
 import {addPromotionUsingPost} from "@/api/promotionController";
+import {Col, message, Row, Space} from "antd";
 
 /**
  * 发布宣传
  *
  * @constructor
  */
-const PromotionPublish= () => {
+const PromotionPublish: React.FC<Props> = (props) => {
+
+    const [townName, setTownName] = React.useState<string>(""); // 城镇名称
 
     return (
         <ProForm<API.PromotionAddRequest>
@@ -25,6 +28,8 @@ const PromotionPublish= () => {
             onFinish={async (values) => {
                 console.log('Form values:', values); // 添加日志记录
                 try {
+                    values.townName = townName;
+                    console.log(values);
                     const res = addPromotionUsingPost(values);
                     if (res.data) {
                         message.success("发布宣传成功");
@@ -62,7 +67,7 @@ const PromotionPublish= () => {
                     },
                     {
                         value: "自然风光秀丽",
-                        label: "护照",
+                        label: "自然风光秀丽",
                     },
                     {
                         value: "古建筑",
@@ -87,14 +92,64 @@ const PromotionPublish= () => {
                 name="description"
                 label="宣传描述"
             />
-            <ProFormUploadButton
-                name="picture"
-                label="图片"
-            />
-            <ProFormUploadDragger
-                name="video"
-                label="视频"
-            />
+          <ProFormCascader
+              width="md"
+              request={async () => [
+                {
+                  value: '安徽',
+                  label: '安徽',
+                  children: [
+                    {
+                      value: '安庆',
+                      label: '安庆',
+                      children: [
+                        {
+                          value: '潜山',
+                          label: '潜山',
+                        },
+                        {
+                          value: '望江',
+                          label: '望江',
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  value: '北京',
+                  label: '北京',
+                  children: [
+                    {
+                      value: '海淀',
+                      label: '海淀',
+                      children: [
+                        {
+                          value: '西土城',
+                          label: '西土城',
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ]}
+              name="townName"
+              label="区域"
+              initialValue={['安徽', '安庆', '潜山']}
+              fieldProps={{
+                  onChange: (value, selectedOptions) => {
+                      setTownName(value[value.length - 1]);
+                      console.log(value[value.length - 1]);
+                  },
+              }}
+          />
+            {/*<ProFormUploadButton*/}
+            {/*    name="picture"*/}
+            {/*    label="图片"*/}
+            {/*/>*/}
+            {/*<ProFormUploadDragger*/}
+            {/*    name="video"*/}
+            {/*    label="视频"*/}
+            {/*/>*/}
         </ProForm>
     );
 };

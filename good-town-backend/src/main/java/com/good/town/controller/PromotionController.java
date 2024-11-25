@@ -1,6 +1,7 @@
 package com.good.town.controller;
 
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.good.town.annotation.AuthCheck;
 import com.good.town.common.BaseResponse;
@@ -11,10 +12,13 @@ import com.good.town.constant.UserConstant;
 import com.good.town.exception.BusinessException;
 import com.good.town.exception.ThrowUtils;
 import com.good.town.model.dto.promotion.*;
+import com.good.town.model.dto.town.TownQueryRequest;
 import com.good.town.model.entity.Promotion;
+import com.good.town.model.entity.Town;
 import com.good.town.model.entity.User;
 import com.good.town.model.vo.PromotionVO;
 import com.good.town.service.PromotionService;
+import com.good.town.service.TownService;
 import com.good.town.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -36,6 +40,9 @@ public class PromotionController {
 
     @Resource
     private PromotionService promotionService;
+
+    @Resource
+    private TownService townService;
 
     @Resource
     private UserService userService;
@@ -62,6 +69,13 @@ public class PromotionController {
         if (video != null) {
             promotion.setVideo(JSONUtil.toJsonStr(video));
         }
+        // 将乡镇名转化为乡镇ID
+        String townName = promotionAddRequest.getTownName();
+        TownQueryRequest townQueryRequest = new TownQueryRequest();
+        townQueryRequest.setTownName(townName);
+        QueryWrapper<Town> queryWrapper = townService.getQueryWrapper(townQueryRequest);
+        Town town = townService.getOne(queryWrapper);
+        promotion.setTownId(town.getId());
         // 数据校验
         promotionService.validPromotion(promotion, true);
         User loginUser = userService.getLoginUser(request);

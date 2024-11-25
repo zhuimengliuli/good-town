@@ -1,11 +1,6 @@
 "use client";
-import { ProForm, ProFormText } from "@ant-design/pro-components";
+import {ProForm, ProFormText} from "@ant-design/pro-components";
 import UserCount from "@/app/admin/count/components/UserCount";
-import {useEffect, useState} from "react";
-import PromotionVO = API.PromotionVO;
-import {listMyPromotionVoByPageUsingPost} from "@/api/promotionController";
-import {message} from "antd";
-import PagePromotionVO_ = API.PagePromotionVO_;
 
 /**
  * 用户统计页面
