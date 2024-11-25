@@ -388,14 +388,17 @@ declare namespace API {
   };
 
   type PromotionVO = {
-    content?: string;
     createTime?: string;
+    description?: string;
     id?: number;
-    tagList?: string[];
-    title?: string;
+    picture?: string;
+    themeName?: string;
+    townId?: number;
+    type?: string;
     updateTime?: string;
     user?: UserVO;
     userId?: number;
+    video?: string;
   };
 
   type Town = {

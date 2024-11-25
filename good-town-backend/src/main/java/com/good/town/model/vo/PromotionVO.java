@@ -23,19 +23,39 @@ public class PromotionVO implements Serializable {
     private Long id;
 
     /**
-     * 标题
-     */
-    private String title;
-
-    /**
-     * 内容
-     */
-    private String content;
-
-    /**
-     * 创建用户 id
+     * 用户id
      */
     private Long userId;
+
+    /**
+     * 乡镇id
+     */
+    private Long townId;
+
+    /**
+     * 宣传类型
+     */
+    private String type;
+
+    /**
+     * 宣传主题名称
+     */
+    private String themeName;
+
+    /**
+     * 宣传描述
+     */
+    private String description;
+
+    /**
+     * 图片（JSON数组）
+     */
+    private String picture;
+
+    /**
+     * 视频（JSON数组）
+     */
+    private String video;
 
     /**
      * 创建时间
@@ -47,10 +67,6 @@ public class PromotionVO implements Serializable {
      */
     private Date updateTime;
 
-    /**
-     * 标签列表
-     */
-    private List<String> tagList;
 
     /**
      * 创建用户信息
@@ -69,7 +85,6 @@ public class PromotionVO implements Serializable {
         }
         Promotion promotion = new Promotion();
         BeanUtils.copyProperties(promotionVO, promotion);
-        List<String> tagList = promotionVO.getTagList();
         return promotion;
     }
 

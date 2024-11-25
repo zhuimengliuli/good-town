@@ -48,7 +48,6 @@ public class AssistanceServiceImpl extends ServiceImpl<AssistanceMapper, Assista
     @Override
     public void validAssistance(Assistance assistance, boolean add) {
         ThrowUtils.throwIf(assistance == null, ErrorCode.PARAMS_ERROR);
-        // todo 从对象中取值
         String description = assistance.getDescription();
         // 创建数据时，参数不能为空
         if (add) {
@@ -69,7 +68,6 @@ public class AssistanceServiceImpl extends ServiceImpl<AssistanceMapper, Assista
         if (assistanceQueryRequest == null) {
             return queryWrapper;
         }
-        // todo 从对象中取值
         Long id = assistanceQueryRequest.getId();
         Long notId = assistanceQueryRequest.getNotId();
         String searchText = assistanceQueryRequest.getSearchText();
@@ -77,7 +75,6 @@ public class AssistanceServiceImpl extends ServiceImpl<AssistanceMapper, Assista
         String sortOrder = assistanceQueryRequest.getSortOrder();
         String description = assistanceQueryRequest.getDescription();
         Long userId = assistanceQueryRequest.getUserId();
-        // todo 补充需要的查询条件
         // 从多字段中搜索
         if (StringUtils.isNotBlank(searchText)) {
             // 需要拼接查询条件

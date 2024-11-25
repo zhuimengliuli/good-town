@@ -1,9 +1,11 @@
 "use client";
-import {ProCard} from "@ant-design/pro-components";
-import UserCountChart from "@/app/admin/count/components/UserCountChart";
-
-import PromotionUserCountTable from "@/app/admin/count/components/PromotionUserCountTable";
-import AssistanceUserCountTable from "@/app/admin/count/components/AssistanceUserCountTable";
+import { ProForm, ProFormText } from "@ant-design/pro-components";
+import UserCount from "@/app/admin/count/components/UserCount";
+import {useEffect, useState} from "react";
+import PromotionVO = API.PromotionVO;
+import {listMyPromotionVoByPageUsingPost} from "@/api/promotionController";
+import {message} from "antd";
+import PagePromotionVO_ = API.PagePromotionVO_;
 
 /**
  * 用户统计页面
@@ -11,19 +13,36 @@ import AssistanceUserCountTable from "@/app/admin/count/components/AssistanceUse
  * @constructor
  */
 const UserCountPage: React.FC = () => {
-  return (
-      <div>
-          <ProCard>
-              <UserCountChart></UserCountChart>
-          </ProCard>
-          <ProCard title={"宣传用户统计表"}>
-              <PromotionUserCountTable></PromotionUserCountTable>
-          </ProCard>
-          <ProCard title={"助力用户统计表"}>
-              <AssistanceUserCountTable></AssistanceUserCountTable>
-          </ProCard>
-      </div>
+  const year = new Date().getFullYear();
 
+  return (
+    <div>
+      <ProForm<{
+        year: string;
+        town: string;
+      }>
+        layout="horizontal"
+        onFinish={async (values) => {
+          return <UserCount year={values.year} />;
+        }}
+      >
+        <ProFormText
+          name="year"
+          label="年份"
+          placeholder="请输入年份"
+          initialValue={year}
+          width="md"
+        />
+        <ProFormText
+          name="town"
+          label="乡镇"
+          placeholder="请输入乡镇"
+          initialValue="安庆"
+          width="md"
+        />
+      </ProForm>
+      <UserCount year={year} />
+    </div>
   );
 };
 export default UserCountPage;

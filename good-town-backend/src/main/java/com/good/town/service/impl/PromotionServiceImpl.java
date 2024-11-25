@@ -74,7 +74,6 @@ public class PromotionServiceImpl extends ServiceImpl<PromotionMapper, Promotion
         if (promotionQueryRequest == null) {
             return queryWrapper;
         }
-        // todo 从对象中取值
         Long id = promotionQueryRequest.getId();
         Long notId = promotionQueryRequest.getNotId();
         String searchText = promotionQueryRequest.getSearchText();
@@ -83,7 +82,6 @@ public class PromotionServiceImpl extends ServiceImpl<PromotionMapper, Promotion
         String themeName = promotionQueryRequest.getThemeName();
         String description = promotionQueryRequest.getDescription();
         Long userId = promotionQueryRequest.getUserId();
-        // todo 补充需要的查询条件
         // 从多字段中搜索
         if (StringUtils.isNotBlank(searchText)) {
             // 需要拼接查询条件

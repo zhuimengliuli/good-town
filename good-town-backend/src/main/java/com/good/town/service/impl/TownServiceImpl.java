@@ -73,7 +73,6 @@ public class TownServiceImpl extends ServiceImpl<TownMapper, Town> implements To
         if (townQueryRequest == null) {
             return queryWrapper;
         }
-        // todo 从对象中取值
         Long id = townQueryRequest.getId();
         Long notId = townQueryRequest.getNotId();
         String sortField = townQueryRequest.getSortField();

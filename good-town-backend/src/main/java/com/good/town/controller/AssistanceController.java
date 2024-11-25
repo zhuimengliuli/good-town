@@ -54,12 +54,10 @@ public class AssistanceController {
     @PostMapping("/add")
     public BaseResponse<Long> addAssistance(@RequestBody AssistanceAddRequest assistanceAddRequest, HttpServletRequest request) {
         ThrowUtils.throwIf(assistanceAddRequest == null, ErrorCode.PARAMS_ERROR);
-        // todo 在此处将实体类和 DTO 进行转换
         Assistance assistance = new Assistance();
         BeanUtils.copyProperties(assistanceAddRequest, assistance);
         // 数据校验
         assistanceService.validAssistance(assistance, true);
-        // todo 填充默认值
         User loginUser = userService.getLoginUser(request);
         assistance.setUserId(loginUser.getId());
         // 写入数据库
@@ -109,7 +107,6 @@ public class AssistanceController {
         if (assistanceUpdateRequest == null || assistanceUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        // todo 在此处将实体类和 DTO 进行转换
         Assistance assistance = new Assistance();
         BeanUtils.copyProperties(assistanceUpdateRequest, assistance);
         // 数据校验
@@ -215,7 +212,6 @@ public class AssistanceController {
         if (assistanceEditRequest == null || assistanceEditRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        // todo 在此处将实体类和 DTO 进行转换
         Assistance assistance = new Assistance();
         BeanUtils.copyProperties(assistanceEditRequest, assistance);
         // 数据校验
