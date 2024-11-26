@@ -151,9 +151,9 @@ const MyPublish: React.FC = () => {
       const myGetPromotionList = await listMyPromotionVoByPageUsingPost({
         pageSize: pageSize,
       });
-        setMyAssistUserList(myGetPromotionList.data.records[0].assistUserList);
+        setMyAssistUserList(myGetPromotionList.data.records[0].assistanceUserList);
       setMyPromotionList(myGetPromotionList.data.records);
-    console.log(myGetPromotionList.data.records);
+    console.log(myGetPromotionList.data.records[0].assistanceUserList);
     } catch (e: any) {
       message.error("获取宣传信息失败" + e.message);
     }
@@ -187,8 +187,8 @@ const MyPublish: React.FC = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const handlePageChange = (page: number) => {
-      setMyAssistUserList(myPromotionList?.[page].assistUserList);
-      console.log(myPromotionList?.[page].assistUserList);
+      setMyAssistUserList(myPromotionList?.[page - 1].assistanceUserList);
+      console.log(myPromotionList?.[page - 1].assistanceUserList);
     setCurrentPage(page);
   };
 
@@ -196,7 +196,12 @@ const MyPublish: React.FC = () => {
     <List
       className="check-list"
       itemLayout="horizontal"
-      dataSource={data}
+      dataSource={myAssistUserList?.map((item) => {
+          console.log(item.userName);
+          return {
+              title: item.userName,
+          };
+      })}
       renderItem={(item) => (
         <List.Item
           actions={[
