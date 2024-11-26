@@ -75,6 +75,7 @@ public class AssistanceServiceImpl extends ServiceImpl<AssistanceMapper, Assista
         String sortOrder = assistanceQueryRequest.getSortOrder();
         String description = assistanceQueryRequest.getDescription();
         Long userId = assistanceQueryRequest.getUserId();
+        Long promotionId = assistanceQueryRequest.getPromotionId();
         // 从多字段中搜索
         if (StringUtils.isNotBlank(searchText)) {
             // 需要拼接查询条件
@@ -86,6 +87,7 @@ public class AssistanceServiceImpl extends ServiceImpl<AssistanceMapper, Assista
         queryWrapper.ne(ObjectUtils.isNotEmpty(notId), "id", notId);
         queryWrapper.eq(ObjectUtils.isNotEmpty(id), "id", id);
         queryWrapper.eq(ObjectUtils.isNotEmpty(userId), "userId", userId);
+        queryWrapper.eq(ObjectUtils.isNotEmpty(promotionId), "promotionId", promotionId);
         // 排序规则
         queryWrapper.orderBy(SqlUtils.validSortField(sortField),
                 sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
@@ -165,6 +167,12 @@ public class AssistanceServiceImpl extends ServiceImpl<AssistanceMapper, Assista
             list.add(count == null ? 0 : count);
         }
         return list;
+    }
+
+    @Override
+    public List<Long> getUserIdListByPromotionId(Long promotionId) {
+        List<Long> userIdList = baseMapper.selectByPromotionId(promotionId);
+        return userIdList;
     }
 
 }

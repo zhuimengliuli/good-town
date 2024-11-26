@@ -42,7 +42,7 @@ public class Assistance implements Serializable {
     /**
      * 状态：0：待接收 1：同意 2：拒绝 3：取消
      */
-    private String state;
+    private Integer state;
 
     /**
      * 创建时间

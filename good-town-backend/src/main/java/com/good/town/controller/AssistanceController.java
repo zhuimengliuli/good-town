@@ -2,10 +2,7 @@ package com.good.town.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.good.town.annotation.AuthCheck;
-import com.good.town.common.BaseResponse;
-import com.good.town.common.DeleteRequest;
-import com.good.town.common.ErrorCode;
-import com.good.town.common.ResultUtils;
+import com.good.town.common.*;
 import com.good.town.constant.UserConstant;
 import com.good.town.exception.BusinessException;
 import com.good.town.exception.ThrowUtils;
@@ -60,6 +57,7 @@ public class AssistanceController {
         assistanceService.validAssistance(assistance, true);
         User loginUser = userService.getLoginUser(request);
         assistance.setUserId(loginUser.getId());
+        assistance.setState(AssistanceStateEnum.PENDING.getCode());
         // 写入数据库
         boolean result = assistanceService.save(assistance);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);

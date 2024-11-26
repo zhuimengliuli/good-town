@@ -56,4 +56,11 @@ public interface AssistanceService extends IService<Assistance> {
      * @return
      */
     List<Integer> getUserCount(Integer year);
+
+    /**
+     * 获取用户列表
+     * @param promotionId
+     * @return
+     */
+    List<Long> getUserIdListByPromotionId(Long promotionId);
 }

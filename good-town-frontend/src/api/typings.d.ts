@@ -31,6 +31,7 @@ declare namespace API {
     notId?: number;
     pageSize?: number;
     picture?: string;
+    promotionId?: number;
     searchText?: string;
     sortField?: string;
     sortOrder?: string;
@@ -45,11 +46,10 @@ declare namespace API {
   };
 
   type AssistanceVO = {
-    content?: string;
     createTime?: string;
+    description?: string;
     id?: number;
-    tagList?: string[];
-    title?: string;
+    picture?: string;
     updateTime?: string;
     user?: UserVO;
     userId?: number;
@@ -389,6 +389,7 @@ declare namespace API {
   };
 
   type PromotionVO = {
+    assistanceUserList?: UserVO[];
     createTime?: string;
     description?: string;
     id?: number;

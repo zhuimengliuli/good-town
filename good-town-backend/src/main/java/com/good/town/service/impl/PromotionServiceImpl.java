@@ -13,6 +13,7 @@ import com.good.town.model.entity.Promotion;
 import com.good.town.model.entity.User;
 import com.good.town.model.vo.PromotionVO;
 import com.good.town.model.vo.UserVO;
+import com.good.town.service.AssistanceService;
 import com.good.town.service.PromotionService;
 import com.good.town.service.UserService;
 import com.good.town.utils.SqlUtils;
@@ -41,6 +42,9 @@ public class PromotionServiceImpl extends ServiceImpl<PromotionMapper, Promotion
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private AssistanceService assistanceService;
 
     /**
      * 校验数据
@@ -156,6 +160,14 @@ public class PromotionServiceImpl extends ServiceImpl<PromotionMapper, Promotion
                 user = userIdUserListMap.get(userId).get(0);
             }
             promotionVO.setUser(userService.getUserVO(user));
+
+            Long id = promotionVO.getId();
+            List<Long> userIdList = assistanceService.getUserIdListByPromotionId(id);
+            List<UserVO> userVOList = new ArrayList<>();
+            if (userIdList != null && userIdList.size() > 0) {
+                userVOList = userService.getUserVO(userService.listByIds(userIdList));
+            }
+            promotionVO.setAssistanceUserList(userVOList);
         });
         // endregion
 

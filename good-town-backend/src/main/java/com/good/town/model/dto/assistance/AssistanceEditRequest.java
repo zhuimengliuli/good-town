@@ -33,5 +33,10 @@ public class AssistanceEditRequest implements Serializable {
      */
     private String picture;
 
+    /**
+     * 助力状态
+     */
+    private String state;
+
     private static final long serialVersionUID = 1L;
 }

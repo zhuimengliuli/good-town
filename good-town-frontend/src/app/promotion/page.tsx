@@ -25,7 +25,7 @@ const PromotionPage: React.FC = () => {
             console.log(res.data?.records);
             console.log(promotionList);
         } catch (e: any) {
-            message.error("获取宣传信息失败" + e.message());
+            message.error("获取宣传信息失败" + e.message);
         }
     };
     useEffect(() => {

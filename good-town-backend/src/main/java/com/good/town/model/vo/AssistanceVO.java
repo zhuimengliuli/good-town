@@ -23,14 +23,14 @@ public class AssistanceVO implements Serializable {
     private Long id;
 
     /**
-     * 标题
+     * 助力描述
      */
-    private String title;
+    private String description;
 
     /**
-     * 内容
+     * 助力介绍图片
      */
-    private String content;
+    private String picture;
 
     /**
      * 创建用户 id
@@ -48,9 +48,9 @@ public class AssistanceVO implements Serializable {
     private Date updateTime;
 
     /**
-     * 标签列表
+     * 状态：0：待接收 1：同意 2：拒绝 3：取消
      */
-    private List<String> tagList;
+    private Integer state;
 
     /**
      * 创建用户信息
@@ -69,7 +69,6 @@ public class AssistanceVO implements Serializable {
         }
         Assistance assistance = new Assistance();
         BeanUtils.copyProperties(assistanceVO, assistance);
-        List<String> tagList = assistanceVO.getTagList();
         return assistance;
     }
 

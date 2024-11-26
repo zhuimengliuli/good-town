@@ -10,7 +10,7 @@
             <result property="userId" column="userId" jdbcType="BIGINT"/>
             <result property="description" column="description" jdbcType="VARCHAR"/>
             <result property="picture" column="picture" jdbcType="VARCHAR"/>
-            <result property="state" column="state" jdbcType="VARCHAR"/>
+            <result property="state" column="state" jdbcType="TINYINT"/>
             <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
             <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
@@ -26,5 +26,10 @@
     <select id="countByCreateTime" resultType="java.lang.Integer">
         SELECT COUNT(distinct userId) FROM assistance
         WHERE YEAR(createTime) = #{year} AND MONTH(createTime) = #{month}
+    </select>
+
+    <select id="selectByPromotionId" resultType="java.lang.Long">
+        SELECT userId FROM assistance
+        WHERE promotionId = #{promotionId}
     </select>
 </mapper>

@@ -3,6 +3,8 @@ package com.good.town.mapper;
 import com.good.town.model.entity.Assistance;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
 * @author 未央
 * @description 针对表【assistance(助力)】的数据库操作Mapper
@@ -11,6 +13,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface AssistanceMapper extends BaseMapper<Assistance> {
     Integer countByCreateTime(Integer year, Integer month);
+    List<Long> selectByPromotionId(Long promotionId);
 }
 
 

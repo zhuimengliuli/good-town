@@ -74,6 +74,11 @@ public class PromotionVO implements Serializable {
     private UserVO user;
 
     /**
+     * 协助用户列表
+     */
+    private List<UserVO> assistanceUserList;
+
+    /**
      * 封装类转对象
      *
      * @param promotionVO

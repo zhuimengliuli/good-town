@@ -46,5 +46,10 @@ public class AssistanceQueryRequest extends PageRequest implements Serializable 
      */
     private Long userId;
 
+    /**
+     * 宣传ID
+     */
+    private Long promotionId;
+
     private static final long serialVersionUID = 1L;
 }
