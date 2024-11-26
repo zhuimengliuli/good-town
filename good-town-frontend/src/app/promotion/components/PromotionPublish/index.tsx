@@ -20,7 +20,7 @@ import {Col, message, Row, Space} from "antd";
  */
 const PromotionPublish: React.FC<Props> = (props) => {
 
-    const [townName, setTownName] = React.useState<string>(""); // 城镇名称
+    const [townName, setTownName] = React.useState<string>("潜山"); // 城镇名称
 
     return (
         <ProForm<API.PromotionAddRequest>
@@ -30,7 +30,7 @@ const PromotionPublish: React.FC<Props> = (props) => {
                 try {
                     values.townName = townName;
                     console.log(values);
-                    const res = addPromotionUsingPost(values);
+                    const res = await addPromotionUsingPost(values);
                     if (res.data) {
                         message.success("发布宣传成功");
                     }

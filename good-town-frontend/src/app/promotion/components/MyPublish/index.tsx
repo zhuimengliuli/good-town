@@ -4,7 +4,8 @@ import {
     Col, message, Row,
     Space, Carousel, Segmented,
     Button, Typography, Drawer,
-    List, Pagination, Popconfirm
+    List, Pagination, Popconfirm,
+    Empty
 } from "antd";
 import {
     ProForm,
@@ -161,6 +162,7 @@ const MyPublish: React.FC = () => {
             if (res.data) {
                 message.success('删除成功');
                 fetchMyPromotionList(15);
+                setCurrentPage(1);
             }
 
         } catch (e: any) {
@@ -373,7 +375,9 @@ const MyPublish: React.FC = () => {
                 value={currentSegment}
             /> 
             <div style={{ marginTop: 16 }}> 
-                {renderContent()} 
+                {myPromotionList?.length === 0 ? (<Empty description="暂无宣传数据" />) : (
+                    renderContent())
+                }
             </div>
 
             <Pagination
