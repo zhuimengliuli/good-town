@@ -14,6 +14,7 @@ declare namespace API {
   type AssistanceAddRequest = {
     description?: string;
     picture?: string;
+    promotionId?: number;
     userId?: number;
   };
 
@@ -21,6 +22,7 @@ declare namespace API {
     description?: string;
     id?: number;
     picture?: string;
+    promotionId?: number;
     state?: string;
     userId?: number;
   };
@@ -43,6 +45,7 @@ declare namespace API {
     description?: string;
     id?: number;
     picture?: string;
+    promotionId?: number;
     userId?: number;
   };
 
@@ -67,6 +70,12 @@ declare namespace API {
   type BaseResponseBoolean_ = {
     code?: number;
     data?: boolean;
+    message?: string;
+  };
+
+  type BaseResponseListAssistanceVO_ = {
+    code?: number;
+    data?: AssistanceVO[];
     message?: string;
   };
 
@@ -172,6 +181,11 @@ declare namespace API {
   type getAssistanceVOByIdUsingGETParams = {
     /** id */
     id?: number;
+  };
+
+  type getMyAssistanceListByStateUsingGETParams = {
+    /** state */
+    state?: number;
   };
 
   type getPromotionUserCountUsingGETParams = {

@@ -1,5 +1,6 @@
 package com.good.town.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.good.town.annotation.AuthCheck;
 import com.good.town.common.*;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 助力服务接口
@@ -231,10 +233,41 @@ public class AssistanceController {
 
     // endregion
 
+    /**
+     * 获取助力用户数量
+     * @param year
+     * @param request
+     * @return
+     */
     @GetMapping("/get/count")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<List<Integer>> getAssistanceUserCount(Integer year, HttpServletRequest request) {
         List<Integer> assistanceUserCountList = assistanceService.getUserCount(year);
         return ResultUtils.success(assistanceUserCountList);
+    }
+
+    /**
+     *  根据状态获取助力列表
+     *
+     * @param state
+     * @param request
+     * @return
+     */
+    @GetMapping("/get/state")
+    public BaseResponse<List<AssistanceVO>> getMyAssistanceListByState(Integer state, HttpServletRequest request) {
+        User loginUser = userService.getLoginUser(request);
+        log.info("state:" + state);
+        log.info("userId:" + loginUser.getId());
+
+        List<Assistance> assistanceList = assistanceService.getBaseMapper().selectList(new QueryWrapper<Assistance>()
+                .eq("state", state)
+                .eq("userId", loginUser.getId()));
+        log.info("assistanceList:" + assistanceList.toString());
+        List<AssistanceVO> assistanceVOList = assistanceList.stream().map(assistance -> {
+            AssistanceVO assistanceVo = AssistanceVO.objToVo(assistance);
+            return assistanceVo;
+        }).collect(Collectors.toList());
+        log.info("assistanceVOList:" +assistanceVOList);
+        return ResultUtils.success(assistanceVOList);
     }
 }

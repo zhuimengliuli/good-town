@@ -33,4 +33,9 @@
         WHERE promotionId = #{promotionId}
     </select>
 
+
+    <select id="selectByState" resultType="java.lang.Long">
+        SELECT * FROM assistance
+        WHERE state = #{state}
+    </select>
 </mapper>

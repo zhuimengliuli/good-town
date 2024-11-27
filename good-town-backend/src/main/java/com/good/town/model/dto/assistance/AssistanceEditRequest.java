@@ -24,6 +24,11 @@ public class AssistanceEditRequest implements Serializable {
     private Long userId;
 
     /**
+     * 宣传id
+     */
+    private Long promotionId;
+
+    /**
      * 助力描述
      */
     private String description;

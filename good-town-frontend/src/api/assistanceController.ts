@@ -62,6 +62,24 @@ export async function getAssistanceUserCountUsingGet(
   });
 }
 
+/** getMyAssistanceListByState GET /api/assistance/get/state */
+export async function getMyAssistanceListByStateUsingGet(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.getMyAssistanceListByStateUsingGETParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.BaseResponseListAssistanceVO_>(
+    "/api/assistance/get/state",
+    {
+      method: "GET",
+      params: {
+        ...params,
+      },
+      ...(options || {}),
+    }
+  );
+}
+
 /** getAssistanceVOById GET /api/assistance/get/vo */
 export async function getAssistanceVoByIdUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
