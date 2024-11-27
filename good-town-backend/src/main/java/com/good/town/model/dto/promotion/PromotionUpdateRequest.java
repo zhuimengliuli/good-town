@@ -18,6 +18,35 @@ public class PromotionUpdateRequest implements Serializable {
      */
     private Long id;
 
+    /**
+     * 宣传类型
+     */
+    private String type;
+
+    /**
+     * 宣传主题名称
+     */
+    private String themeName;
+
+    /**
+     * 宣传描述
+     */
+    private String description;
+
+    /**
+     * 图片（JSON数组）
+     */
+    private String picture;
+
+    /**
+     * 视频（JSON数组）
+     */
+    private String video;
+
+    /**
+     * 状态：0：已发布无助力 1：已发布有助力
+     */
+    private Integer state;
 
     private static final long serialVersionUID = 1L;
 }
