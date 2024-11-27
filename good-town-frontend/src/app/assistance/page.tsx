@@ -1,10 +1,19 @@
 "use client";
-import {Card, Col, Row, List, message} from "antd";
-import { useState, useEffect  } from "react";
+import {Card, Col, Row, List, message, Modal, Typography} from "antd";
+import { useState, useEffect, useRef  } from "react";
 import AssistanceVO = API.AssistanceVO;
 import {
     listMyAssistanceVoByPageUsingPost
 } from "@/api/assistanceController";
+import {
+  PageContainer,
+  ProForm,
+  ProFormSelect,
+  ProFormText,
+  ProFormTextArea,
+  ProFormUploadButton,
+  ProFormUploadDragger,
+} from "@ant-design/pro-components";
 
 /**
  * 我助力界面
@@ -12,13 +21,8 @@ import {
  * @constructor
  */
 
-const ListType1 = () => (
-    <List
-        bordered dataSource={['乡镇1', '乡镇2', 'Item 3']}
-        renderItem={item => (
-                <List.Item>
-                <div>{item}</div>
-            </List.Item>)} />);
+const { Title, Paragraph, Text, Link } = Typography;
+
 const ListType2 = () => (
     <List
         dataSource={['Item 1', 'Item 2', 'Item 3', 'Item 4']}
@@ -48,22 +52,53 @@ const AssistancePage: React.FC = () => {
         fetchMyAssistanceList(15);
     }, []);
 
+    const [myUndoAssistanceList, setMyUndoAssistanceList] = useState<AssistanceVO[]>();
+    const fetchMyUndoAssistanceList = async (pageSize: number) => {
+        try {
+            const myGetUndoAssistanceList = await listMyAssistanceVoByPageUsingPost({pageSize : pageSize});
+            setMyUndoAssistanceList(myGetUndoAssistanceList.data.records);
+        } catch (e: any) {
+            message.error('获取宣传信息失败' + e.message());
+        }
+    }
+
+
+    const ListType1 = () => (
+    <List
+        bordered dataSource={myAssistanceList}
+        renderItem={item => (
+                <List.Item>
+                <div>{item.description}</div>
+            </List.Item>)} />);
+
     const ListType3 = () => (
     <List 
         itemLayout="vertical"
-        dataSource={myAssistanceList}
+        dataSource={["乡镇1", "乡镇2", "乡镇3"]}
         renderItem={item => (
             <List.Item
-                    actions={[<a key="list-loadmore-edit">助力</a>]}
+                    actions={[<a onClick={showModal}>助力</a>]}
                 >
                     <List.Item.Meta
-            title={item.title}
-                description={item.content} />
+            title={item} />
             </List.Item>
 
         )} 
     />);
 
+
+    // 显示助力发布页面的Modal
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const showModal = () => { setIsModalVisible(true); };
+    const handleOk = () => { setIsModalVisible(false); };
+    const handleCancel = () => { setIsModalVisible(false); };
+
+        // 表单项内容
+    const formRef = useRef();
+    const handleFinish = async (values:API.AssistanceAddRequest) => {
+        console.log('Form values:', values);
+        // 处理提交的表单数据 setIsModalVisible(false); 
+    };
 
     return (
         <div>
@@ -84,6 +119,28 @@ const AssistancePage: React.FC = () => {
                     </Card>
                 </Col>
             </Row>
+            
+            <Modal
+              title="助力"
+              visible={isModalVisible}
+                onOk={handleOk}
+                onCancel={handleCancel}>
+                <Paragraph>
+                    <h2>宣传主题名称</h2>
+                </Paragraph>
+              <Paragraph>
+                  <ProFormTextArea
+                    colProps={{ span: 24 }}
+                    name="description"
+                    label="宣传描述"
+                    />
+
+                    {/*<ProFormUploadButton*/}
+                    {/*    name="picture"*/}
+                    {/*    label="图片"*/}
+                    {/*/>*/}
+              </Paragraph>
+          </Modal>
 
             <Row>
                 <Col>

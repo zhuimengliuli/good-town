@@ -15,6 +15,7 @@ import {
   Segmented,
   Space,
   Typography,
+  Modal,
 } from "antd";
 import {
   PageContainer,
@@ -52,20 +53,7 @@ const contentStyle: React.CSSProperties = {
   background: "#364d79",
 };
 
-const data = [
-  {
-    title: "助力1",
-  },
-  {
-    title: "助力2",
-  },
-  {
-    title: "Ant Design Title 3",
-  },
-  {
-    title: "Ant Design Title 4",
-  },
-];
+
 
 const Content2 = () => (
   <ProForm<API.PromotionAddRequest>
@@ -259,6 +247,10 @@ const MyPublish: React.FC = () => {
         return null;
     }
   };
+    // 显示助力消息详情的Modal
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const showModal = () => { setIsModalVisible(true); };
+    const handleOk = () => { setIsModalVisible(false); };
 
   const Content1 = () => (
     <div>
@@ -413,7 +405,35 @@ const MyPublish: React.FC = () => {
         total={myPromotionList?.length}
         onChange={handlePageChange}
         style={{ marginTop: 16 }}
-      />
+          />
+          
+          <Modal
+              title="Promotion Details"
+              visible={isModalVisible}
+              onOk={handleOk}
+              footer={[
+                  <Button key="ok" type="primary" onClick={handleOk}> 确认 </Button>,]} >
+              <Paragraph>
+                  <h3>
+                      {myPromotionList?.[currentPage - 1].themeName ?? "暂无数据"}
+                  </h3>
+                  <h5>
+                      {myPromotionList?.[currentPage - 1].type ?? "暂无数据"}
+                  </h5>
+                  <p>
+                      {myPromotionList?.[currentPage - 1].description ?? "暂无数据"}
+                  </p>
+                  <Carousel>
+                      <div>
+                          <h3 style={contentStyle}> {myPromotionList?.[currentPage - 1].picture ?? "暂无数据"}
+                          </h3>
+                      </div>
+                      <div> <h3 style={contentStyle}> {myPromotionList?.[currentPage - 1].video ?? "暂无数据"}
+                      </h3>
+                      </div>
+                  </Carousel>
+              </Paragraph>
+          </Modal>
     </PageContainer>
   );
 };
