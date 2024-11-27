@@ -2,9 +2,15 @@
 import {Card, Col, Row, List, message, Modal, Typography} from "antd";
 import { useState, useEffect, useRef  } from "react";
 import AssistanceVO = API.AssistanceVO;
+import PromotionVO = API.PromotionVO;
 import {
     listMyAssistanceVoByPageUsingPost
 } from "@/api/assistanceController";
+import {
+    listPromotionByPageUsingPost,
+    getPromotionVoByIdUsingGet
+} from "@/api/promotionController"
+
 import {
   PageContainer,
   ProForm,
@@ -40,9 +46,15 @@ const AssistancePage: React.FC = () => {
     const [activeTabKey, setActiveTabKey] = useState<string>("publish");
 
     const [myAssistanceList, setMyAssistanceList] = useState<AssistanceVO[]>();
+    const [promotionList, setPromotionList] = useState<PromotionVO[]>();
     const fetchMyAssistanceList = async (pageSize: number) => {
         try {
-            const myGetAssistanceList = await listMyAssistanceVoByPageUsingPost({pageSize : pageSize});
+            const myGetAssistanceList = await listMyAssistanceVoByPageUsingPost({ pageSize: pageSize });
+            const myAssistPromotionList = await Promise.all(
+                myGetAssistanceList.data.records.map(
+                    async (record) => {
+                        const promotion = await getPromotionVoByIdUsingGet({ id: record.promotionId }); return promotion;
+                    }));
             setMyAssistanceList(myGetAssistanceList.data.records);
         } catch (e: any) {
             message.error('获取宣传信息失败' + e.message());
