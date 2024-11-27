@@ -255,7 +255,7 @@ public class AssistanceController {
      */
     @GetMapping("/get/count")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<List<Assistance>> getMyAssistanceListByState(Integer state, HttpServletRequest request) {
+    public BaseResponse<List<AssistanceVO>> getMyAssistanceListByState(Integer state, HttpServletRequest request) {
         User loginUser = userService.getLoginUser(request);
         List<Assistance> assistanceList = assistanceService.getBaseMapper().selectList(new QueryWrapper<Assistance>()
                 .eq("state", state)
@@ -264,6 +264,6 @@ public class AssistanceController {
             AssistanceVO assistanceVo = AssistanceVO.objToVo(assistance);
             return assistanceVo;
         }).collect(Collectors.toList());
-        return ResultUtils.success(assistanceList);
+        return ResultUtils.success(assistanceVOList);
     }
 }
