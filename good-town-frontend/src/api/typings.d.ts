@@ -6,7 +6,7 @@ declare namespace API {
     isDelete?: number;
     picture?: string;
     promotionId?: number;
-    state?: string;
+    state?: number;
     updateTime?: string;
     userId?: number;
   };
@@ -21,6 +21,7 @@ declare namespace API {
     description?: string;
     id?: number;
     picture?: string;
+    state?: string;
     userId?: number;
   };
 
@@ -50,6 +51,8 @@ declare namespace API {
     description?: string;
     id?: number;
     picture?: string;
+    promotionId?: number;
+    state?: number;
     updateTime?: string;
     user?: UserVO;
     userId?: number;
@@ -389,7 +392,7 @@ declare namespace API {
   };
 
   type PromotionVO = {
-    assistanceUserList?: UserVO[];
+    assistanceList?: AssistanceVO[];
     createTime?: string;
     description?: string;
     id?: number;

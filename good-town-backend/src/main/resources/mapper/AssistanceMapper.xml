@@ -32,4 +32,5 @@
         SELECT userId FROM assistance
         WHERE promotionId = #{promotionId}
     </select>
+
 </mapper>
