@@ -247,23 +247,27 @@ public class AssistanceController {
     }
 
     /**
-     * 获取助力用户数量
+     *  根据状态获取助力列表
      *
      * @param state
      * @param request
      * @return
      */
-    @GetMapping("/get/count")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @GetMapping("/get/state")
     public BaseResponse<List<AssistanceVO>> getMyAssistanceListByState(Integer state, HttpServletRequest request) {
         User loginUser = userService.getLoginUser(request);
+        log.info("state:" + state);
+        log.info("userId:" + loginUser.getId());
+
         List<Assistance> assistanceList = assistanceService.getBaseMapper().selectList(new QueryWrapper<Assistance>()
                 .eq("state", state)
                 .eq("userId", loginUser.getId()));
+        log.info("assistanceList:" + assistanceList.toString());
         List<AssistanceVO> assistanceVOList = assistanceList.stream().map(assistance -> {
             AssistanceVO assistanceVo = AssistanceVO.objToVo(assistance);
             return assistanceVo;
         }).collect(Collectors.toList());
+        log.info("assistanceVOList:" +assistanceVOList);
         return ResultUtils.success(assistanceVOList);
     }
 }
