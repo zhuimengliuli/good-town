@@ -38,5 +38,10 @@ public class AssistanceUpdateRequest implements Serializable {
      */
     private String picture;
 
+    /**
+     * 状态：0：待接收 1：同意 2：拒绝 3：取消
+     */
+    private Integer state;
+
     private static final long serialVersionUID = 1L;
 }

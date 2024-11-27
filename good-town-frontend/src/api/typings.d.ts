@@ -46,6 +46,7 @@ declare namespace API {
     id?: number;
     picture?: string;
     promotionId?: number;
+    state?: number;
     userId?: number;
   };
 
