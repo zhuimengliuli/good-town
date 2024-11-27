@@ -41,7 +41,7 @@ public class AssistanceEditRequest implements Serializable {
     /**
      * 助力状态
      */
-    private String state;
+    private Integer state;
 
     private static final long serialVersionUID = 1L;
 }
