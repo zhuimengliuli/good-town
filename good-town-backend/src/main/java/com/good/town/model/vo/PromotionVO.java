@@ -22,6 +22,8 @@ public class PromotionVO implements Serializable {
      */
     private Long id;
 
+
+
     /**
      * 用户id
      */
@@ -74,9 +76,9 @@ public class PromotionVO implements Serializable {
     private UserVO user;
 
     /**
-     * 协助用户列表
+     * 协助列表
      */
-    private List<UserVO> assistanceUserList;
+    private List<AssistanceVO> assistanceList;
 
     /**
      * 封装类转对象

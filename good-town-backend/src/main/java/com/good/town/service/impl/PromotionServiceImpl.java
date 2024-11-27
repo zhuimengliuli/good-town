@@ -9,8 +9,10 @@ import com.good.town.constant.CommonConstant;
 import com.good.town.exception.ThrowUtils;
 import com.good.town.mapper.PromotionMapper;
 import com.good.town.model.dto.promotion.PromotionQueryRequest;
+import com.good.town.model.entity.Assistance;
 import com.good.town.model.entity.Promotion;
 import com.good.town.model.entity.User;
+import com.good.town.model.vo.AssistanceVO;
 import com.good.town.model.vo.PromotionVO;
 import com.good.town.model.vo.UserVO;
 import com.good.town.service.AssistanceService;
@@ -154,20 +156,29 @@ public class PromotionServiceImpl extends ServiceImpl<PromotionMapper, Promotion
                 .collect(Collectors.groupingBy(User::getId));
         // 填充信息
         promotionVOList.forEach(promotionVO -> {
-            Long userId = promotionVO.getUserId();
+            Long promotionUserId = promotionVO.getUserId();
             User user = null;
-            if (userIdUserListMap.containsKey(userId)) {
-                user = userIdUserListMap.get(userId).get(0);
+            if (userIdUserListMap.containsKey(promotionUserId)) {
+                user = userIdUserListMap.get(promotionUserId).get(0);
             }
             promotionVO.setUser(userService.getUserVO(user));
 
-            Long id = promotionVO.getId();
-            List<Long> userIdList = assistanceService.getUserIdListByPromotionId(id);
-            List<UserVO> userVOList = new ArrayList<>();
-            if (userIdList != null && userIdList.size() > 0) {
-                userVOList = userService.getUserVO(userService.listByIds(userIdList));
+            Long promotionId = promotionVO.getId();
+            List<Long> assistanceUserIdList = assistanceService.getUserIdListByPromotionId(promotionId);
+            List<AssistanceVO> assistanceVOList = new ArrayList<>();
+            if (assistanceUserIdList != null && assistanceUserIdList.size() > 0) {
+                for (Long assistanceUserId : assistanceUserIdList) {
+                    Assistance assistance = assistanceService.getOne(new QueryWrapper<Assistance>()
+                            .eq("userId", assistanceUserId)
+                            .eq("promotionId", promotionId));
+                    AssistanceVO assistanceVO = AssistanceVO.objToVo(assistance);
+                    UserVO assistanceUserVO = userService.getUserVO(userService.getById(assistanceUserId));
+                    assistanceVO.setPromotionId(promotionId);
+                    assistanceVO.setUser(assistanceUserVO);
+                    assistanceVOList.add(assistanceVO);
+                }
             }
-            promotionVO.setAssistanceUserList(userVOList);
+            promotionVO.setAssistanceList(assistanceVOList);
         });
         // endregion
 

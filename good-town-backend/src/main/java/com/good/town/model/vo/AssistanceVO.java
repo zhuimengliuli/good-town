@@ -23,6 +23,11 @@ public class AssistanceVO implements Serializable {
     private Long id;
 
     /**
+     * 宣传id
+     */
+    private Long promotionId;
+
+    /**
      * 助力描述
      */
     private String description;

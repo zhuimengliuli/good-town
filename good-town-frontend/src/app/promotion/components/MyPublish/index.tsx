@@ -151,9 +151,11 @@ const MyPublish: React.FC = () => {
       const myGetPromotionList = await listMyPromotionVoByPageUsingPost({
         pageSize: pageSize,
       });
-        setMyAssistUserList(myGetPromotionList.data.records[0].assistanceUserList);
+        setMyAssistUserList(myGetPromotionList.data.records[0].assistanceList.map((item: API.AssistanceVO) => {
+            return item.user;
+        }));
       setMyPromotionList(myGetPromotionList.data.records);
-    console.log(myGetPromotionList.data.records[0].assistanceUserList);
+    console.log(myGetPromotionList.data.records[0].assistanceList);
     } catch (e: any) {
       message.error("获取宣传信息失败" + e.message);
     }
@@ -187,8 +189,10 @@ const MyPublish: React.FC = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const handlePageChange = (page: number) => {
-      setMyAssistUserList(myPromotionList?.[page - 1].assistanceUserList);
-      console.log(myPromotionList?.[page - 1].assistanceUserList);
+      setMyAssistUserList(myPromotionList?.[page - 1].assistanceList?.map((item: API.AssistanceVO) => {
+          return item.user || {};
+      }));
+      console.log(myPromotionList?.[page - 1].assistanceList);
     setCurrentPage(page);
   };
 
