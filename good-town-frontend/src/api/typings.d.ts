@@ -23,7 +23,7 @@ declare namespace API {
     id?: number;
     picture?: string;
     promotionId?: number;
-    state?: string;
+    state?: number;
     userId?: number;
   };
 
@@ -38,6 +38,7 @@ declare namespace API {
     searchText?: string;
     sortField?: string;
     sortOrder?: string;
+    state?: number;
     userId?: number;
   };
 
@@ -360,7 +361,7 @@ declare namespace API {
     id?: number;
     isDelete?: number;
     picture?: string;
-    state?: string;
+    state?: number;
     themeName?: string;
     townId?: number;
     type?: string;
@@ -382,6 +383,7 @@ declare namespace API {
     description?: string;
     id?: number;
     picture?: string[];
+    state?: number;
     themeName?: string;
     type?: string;
     video?: string[];
@@ -403,7 +405,13 @@ declare namespace API {
   };
 
   type PromotionUpdateRequest = {
+    description?: string;
     id?: number;
+    picture?: string;
+    state?: number;
+    themeName?: string;
+    type?: string;
+    video?: string;
   };
 
   type PromotionVO = {

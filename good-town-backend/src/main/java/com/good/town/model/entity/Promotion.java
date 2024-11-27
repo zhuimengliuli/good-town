@@ -55,9 +55,9 @@ public class Promotion implements Serializable {
     private String video;
 
     /**
-     * 状态：0：已发布 -1：已取消
+     * 状态：0：已发布无助力 1：已发布有助力
      */
-    private String state;
+    private Integer state;
 
     /**
      * 创建时间
