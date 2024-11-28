@@ -4,10 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.good.town.annotation.AuthCheck;
-import com.good.town.common.BaseResponse;
-import com.good.town.common.DeleteRequest;
-import com.good.town.common.ErrorCode;
-import com.good.town.common.ResultUtils;
+import com.good.town.common.*;
 import com.good.town.constant.UserConstant;
 import com.good.town.exception.BusinessException;
 import com.good.town.exception.ThrowUtils;
@@ -76,6 +73,7 @@ public class PromotionController {
         QueryWrapper<Town> queryWrapper = townService.getQueryWrapper(townQueryRequest);
         Town town = townService.getOne(queryWrapper);
         promotion.setTownId(town.getId());
+        promotion.setState(PromotionStateEnum.NOT_ASSISTED.getCode());
         // 数据校验
         promotionService.validPromotion(promotion, true);
         User loginUser = userService.getLoginUser(request);

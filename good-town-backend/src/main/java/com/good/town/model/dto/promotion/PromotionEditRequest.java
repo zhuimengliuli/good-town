@@ -42,5 +42,11 @@ public class PromotionEditRequest implements Serializable {
      * 视频
      */
     private List<String> video;
+
+    /**
+     * 状态：0：已发布无助力 1：已发布有助力
+     */
+    private Integer state;
+
     private static final long serialVersionUID = 1L;
 }
