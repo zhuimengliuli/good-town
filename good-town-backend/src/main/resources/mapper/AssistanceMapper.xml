@@ -25,17 +25,17 @@
 
     <select id="countByCreateTime" resultType="java.lang.Integer">
         SELECT COUNT(distinct userId) FROM assistance
-        WHERE YEAR(createTime) = #{year} AND MONTH(createTime) = #{month}
+        WHERE YEAR(createTime) = #{year} AND MONTH(createTime) = #{month} AND isDelete = 0
     </select>
 
     <select id="selectByPromotionId" resultType="java.lang.Long">
         SELECT userId FROM assistance
-        WHERE promotionId = #{promotionId}
+        WHERE promotionId = #{promotionId} AND isDelete = 0
     </select>
 
 
     <select id="selectByState" resultType="java.lang.Long">
         SELECT * FROM assistance
-        WHERE state = #{state}
+        WHERE state = #{state} AND isDelete = 0
     </select>
 </mapper>

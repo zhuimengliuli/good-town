@@ -36,12 +36,12 @@ public class PromotionEditRequest implements Serializable {
     /**
      * 图片
      */
-    private List<String> picture;
+    private String picture;
 
     /**
      * 视频
      */
-    private List<String> video;
+    private String video;
 
     /**
      * 状态：0：已发布无助力 1：已发布有助力

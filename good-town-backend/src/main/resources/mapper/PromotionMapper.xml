@@ -28,7 +28,7 @@
 
     <select id="countByCreateTime" resultType="java.lang.Integer">
         SELECT COUNT(distinct userId) FROM promotion
-        WHERE YEAR(createTime) = #{year} AND MONTH(createTime) = #{month}
+        WHERE YEAR(createTime) = #{year} AND MONTH(createTime) = #{month} AND isDelete = 0
     </select>
 
 </mapper>

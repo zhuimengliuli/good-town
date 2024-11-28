@@ -12,6 +12,8 @@ import {
 } from "@ant-design/pro-components";
 import {addPromotionUsingPost} from "@/api/promotionController";
 import {Col, message, Row, Space} from "antd";
+import {useSelector} from "react-redux";
+import {RootState} from "@/stores";
 
 /**
  * 发布宣传
@@ -21,7 +23,7 @@ import {Col, message, Row, Space} from "antd";
 const PromotionPublish: React.FC<Props> = (props) => {
 
     const [townName, setTownName] = React.useState<string>("潜山"); // 城镇名称
-
+    const loginUser = useSelector((state: RootState) => state.loginUser);
     return (
         <ProForm<API.PromotionAddRequest>
             layout="horizontal"

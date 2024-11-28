@@ -58,14 +58,6 @@ public class PromotionController {
         ThrowUtils.throwIf(promotionAddRequest == null, ErrorCode.PARAMS_ERROR);
         Promotion promotion = new Promotion();
         BeanUtils.copyProperties(promotionAddRequest, promotion);
-        List<String> picture = promotionAddRequest.getPicture();
-        List<String> video = promotionAddRequest.getVideo();
-        if (picture != null) {
-            promotion.setPicture(JSONUtil.toJsonStr(picture));
-        }
-        if (video != null) {
-            promotion.setVideo(JSONUtil.toJsonStr(video));
-        }
         // 将乡镇名转化为乡镇ID
         String townName = promotionAddRequest.getTownName();
         TownQueryRequest townQueryRequest = new TownQueryRequest();
