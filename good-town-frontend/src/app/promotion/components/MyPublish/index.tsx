@@ -33,6 +33,7 @@ import {
   editPromotionUsingPost,
   listMyPromotionVoByPageUsingPost,
 } from "@/api/promotionController";
+import { editAssistanceUsingPost } from "@/api/assistanceController";
 import PromotionVO = API.PromotionVO;
 import UserVO = API.UserVO;
 
@@ -42,7 +43,7 @@ import UserVO = API.UserVO;
  * @constructor
  */
 
-const { Title, Paragraph, Text, Link } = Typography;
+const { Paragraph } = Typography;
 
 const contentStyle: React.CSSProperties = {
   margin: 0,
@@ -52,7 +53,6 @@ const contentStyle: React.CSSProperties = {
   textAlign: "center",
   background: "#364d79",
 };
-
 
 
 const Content2 = () => (
@@ -133,15 +133,23 @@ const Content2 = () => (
 
 const MyPublish: React.FC = () => {
   const [myPromotionList, setMyPromotionList] = useState<PromotionVO[]>();
-  const [myAssistUserList, setMyAssistUserList] = useState<UserVO[]>();
+    const [myAssistUserList, setMyAssistUserList] = useState<UserVO[]>();
+    const [myAssistanceList, setMyAssistanceList] = useState<API.AssistanceVO[]>();
+    const [myUndoAssistanceList, setMyUndoAssistanceList] = useState<API.AssistanceVO[]>();
   const fetchMyPromotionList = async (pageSize: number) => {
     try {
       const myGetPromotionList = await listMyPromotionVoByPageUsingPost({
         pageSize: pageSize,
       });
-        setMyAssistUserList(myGetPromotionList.data.records[0].assistanceList.map((item: API.AssistanceVO) => {
-            return item.user;
-        }));
+        console.log("item", myGetPromotionList.data.records[0]);
+        setMyAssistanceList(myGetPromotionList.data.records[0].assistanceList
+            .filter((item: API.AssistanceVO) => item.state === 1)
+            .map((item: API.AssistanceVO) => item)
+        );
+        setMyUndoAssistanceList(myGetPromotionList.data.records[0].assistanceList
+            .filter((item: API.AssistanceVO) => item.state === 0)
+            .map((item: API.AssistanceVO) => item)
+        );
       setMyPromotionList(myGetPromotionList.data.records);
     console.log(myGetPromotionList.data.records[0].assistanceList);
     } catch (e: any) {
@@ -170,36 +178,82 @@ const MyPublish: React.FC = () => {
   };
 
   const [open, setOpen] = useState(false);
-
   const onClose = () => {
     setOpen(false);
   };
 
   const [currentPage, setCurrentPage] = useState(1);
-  const handlePageChange = (page: number) => {
-      setMyAssistUserList(myPromotionList?.[page - 1].assistanceList?.map((item: API.AssistanceVO) => {
-          return item.user || {};
-      }));
+    const handlePageChange = async (page: number) => {
+        const myGetPromotionList = await listMyPromotionVoByPageUsingPost({
+            pageSize: 15,
+        });
+        setMyPromotionList(myGetPromotionList.data.records);
+        
+      setMyAssistanceList(myPromotionList?.[page - 1].assistanceList
+            ?.filter((item: API.AssistanceVO) => item.state === 1)
+            .map((item: API.AssistanceVO) => item)
+        );
+        setMyUndoAssistanceList(myPromotionList?.[page - 1].assistanceList
+            ?.filter((item: API.AssistanceVO) => item.state === 0)
+            .map((item: API.AssistanceVO) => item)
+        );
+    //   setMyAssistUserList(myPromotionList?.[page - 1].assistanceList?.map((item: API.AssistanceVO) => {
+    //       return item.user || {};
+    //   }));
       console.log(myPromotionList?.[page - 1].assistanceList);
-    setCurrentPage(page);
-  };
+        setCurrentPage(page);
+        setCurrentUserIndex(0);
+    };
 
+    const [currentUserIndex, setCurrentUserIndex] = useState(0);
+    const onAgree = async (index: number) => {
+        try {
+            const res = await editAssistanceUsingPost({
+                id: myUndoAssistanceList?.[index].id,
+                state: 1,
+            });
+            if (res.data) {
+                message.success("确认同意");
+            }
+            handlePageChange(currentPage);
+        } catch (e: any) {
+            message.error("同意失败，" + e.message);
+        }
+        onClose();
+        
+    };
+    const onReject = async (index: number) => {
+        try {
+            const res = await editAssistanceUsingPost({
+                id: myUndoAssistanceList?.[index].id,
+                state: 2,
+            });
+            if (res.data) {
+                message.success("确认同意");
+            }
+            handlePageChange(currentPage);
+        } catch (e: any) {
+            message.error("同意失败，" + e.message);
+        }
+        onClose();
+        
+    };
+    // 助力消息队列
   const ListTypeAssistMsg = () => (
     <List
       className="check-list"
       itemLayout="horizontal"
-      dataSource={myAssistUserList?.map((item) => {
-          console.log(item.userName);
+      dataSource={myUndoAssistanceList?.map((item) => {
           return {
-              title: item.userName,
+              title: item.user?.userName,
           };
       })}
-      renderItem={(item) => (
+      renderItem={(item, index) => (
         <List.Item
           actions={[
-            <a key="list-loadmore-edit">详情</a>,
-            <a key="list-loadmore-edit">同意</a>,
-            <a key="list-loadmore-more">拒绝</a>,
+            <a onClick={() => showModal(index)}>详情</a>,
+            <a onClick={() => onAgree(index)}>同意</a>,
+            <a onClick={() => onReject(index)}>拒绝</a>,
           ]}
         >
           {item.title}
@@ -207,15 +261,14 @@ const MyPublish: React.FC = () => {
       )}
     />
   );
-
+  // 已助力者队列
   const ListTypeAssistMember = () => (
     <List
       className="check-list"
       itemLayout="horizontal"
-      dataSource={myAssistUserList?.map((item) => {
-          console.log(item.userName);
+      dataSource={myAssistanceList?.map((item) => {
           return {
-              title: item.userName,
+              title: item.user?.userName,
           };
       })}
       renderItem={(item) => <List.Item>{item.title}</List.Item>}
@@ -236,6 +289,8 @@ const MyPublish: React.FC = () => {
     }
     setOpen(true);
   };
+    
+   
 
   const [currentSegment, setCurrentSegment] = useState("查看");
   const handleSegmentChange = (value: string) => {
@@ -253,8 +308,14 @@ const MyPublish: React.FC = () => {
   };
     // 显示助力消息详情的Modal
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const showModal = () => { setIsModalVisible(true); };
+    const showModal = (index: number) => {
+        setCurrentUserIndex(index);
+        onClose();
+        setIsModalVisible(true);
+    };
     const handleOk = () => { setIsModalVisible(false); };
+
+
 
   const Content1 = () => (
     <div>
@@ -415,6 +476,7 @@ const MyPublish: React.FC = () => {
               title="Promotion Details"
               visible={isModalVisible}
               onOk={handleOk}
+              onCancel={handleOk}
               footer={[
                   <Button key="ok" type="primary" onClick={handleOk}> 确认 </Button>,]} >
               <Paragraph>
@@ -422,18 +484,17 @@ const MyPublish: React.FC = () => {
                       {myPromotionList?.[currentPage - 1].themeName ?? "暂无数据"}
                   </h3>
                   <h5>
-                      {myPromotionList?.[currentPage - 1].type ?? "暂无数据"}
+                      {myUndoAssistanceList && myUndoAssistanceList.length > 0 ?
+                          myUndoAssistanceList[currentUserIndex]?.user?.userName ?? "暂无数据" : "无数据"}
                   </h5>
                   <p>
-                      {myPromotionList?.[currentPage - 1].description ?? "暂无数据"}
+                      {myUndoAssistanceList && myUndoAssistanceList.length > 0 ?
+                          myUndoAssistanceList[currentUserIndex]?.description ?? "暂无数据" : "无数据"}
                   </p>
                   <Carousel>
                       <div>
                           <h3 style={contentStyle}> {myPromotionList?.[currentPage - 1].picture ?? "暂无数据"}
                           </h3>
-                      </div>
-                      <div> <h3 style={contentStyle}> {myPromotionList?.[currentPage - 1].video ?? "暂无数据"}
-                      </h3>
                       </div>
                   </Carousel>
               </Paragraph>
