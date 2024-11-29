@@ -293,7 +293,11 @@ const MyPublish: React.FC = () => {
    
 
   const [currentSegment, setCurrentSegment] = useState("查看");
-  const handleSegmentChange = (value: string) => {
+    const handleSegmentChange = (value: string) => {
+        if (value === "编辑" && myPromotionList?.[currentPage - 1]?.assistanceList?.length > 0) {
+            message.warning('已有助力不可编辑');
+            return;
+        }
     setCurrentSegment(value);
   };
   const renderContent = () => {
@@ -340,13 +344,15 @@ const MyPublish: React.FC = () => {
 
       <Space size={[16, 16]} wrap>
         <Popconfirm
-          title="删除"
-          description="确定删除这个宣传吗？"
-          onConfirm={confirm}
-          okText="确定"
-          cancelText="取消"
+                  title="删除"
+                  description="确定删除这个宣传吗？"
+                  onConfirm={confirm}
+                  okText="确定"
+                  cancelText="取消"
         >
-          <Button danger>删除</Button>
+                  <Button danger
+                      disabled={myPromotionList?.[currentPage - 1]?.assistanceList?.length > 0}
+                  >删除</Button>
         </Popconfirm>
         <Button
           color="primary"
