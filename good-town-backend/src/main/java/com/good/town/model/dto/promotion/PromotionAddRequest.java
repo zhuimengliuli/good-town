@@ -1,6 +1,7 @@
 package com.good.town.model.dto.promotion;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.util.List;
@@ -26,12 +27,12 @@ public class PromotionAddRequest implements Serializable {
     /**
      * 图片
      */
-    private List<String> picture;
+    private MultipartFile picture;
 
     /**
      * 视频
      */
-    private List<String> video;
+    private MultipartFile video;
 
     /**
      * 宣传类型

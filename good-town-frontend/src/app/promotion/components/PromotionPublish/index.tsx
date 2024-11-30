@@ -144,14 +144,14 @@ const PromotionPublish: React.FC<Props> = (props) => {
                   },
               }}
           />
-            {/*<ProFormUploadButton*/}
-            {/*    name="picture"*/}
-            {/*    label="图片"*/}
-            {/*/>*/}
-            {/*<ProFormUploadDragger*/}
-            {/*    name="video"*/}
-            {/*    label="视频"*/}
-            {/*/>*/}
+            <ProFormUploadButton
+                name="picture"
+                label="图片"
+            />
+            <ProFormUploadDragger
+                name="video"
+                label="视频"
+            />
         </ProForm>
     );
 };

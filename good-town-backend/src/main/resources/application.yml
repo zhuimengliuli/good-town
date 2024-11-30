@@ -52,3 +52,9 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.good.town.controller
+
+minio:
+  server: http://127.0.0.1:9000
+  accesskey: mA8CVbctxp5HEQrTKfTa
+  secretkey: I1q63gi4ql2DzSrSFluLtR7YPnkAfyCtQoDED0Ao
+  bucket: good-town

@@ -1,6 +1,7 @@
 package com.good.town.model.dto.assistance;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.util.List;
@@ -36,7 +37,12 @@ public class AssistanceUpdateRequest implements Serializable {
     /**
      * 助力介绍图片
      */
-    private String picture;
+    private MultipartFile picture;
+
+    /**
+     * 助力介绍视频
+     */
+    private MultipartFile video;
 
     /**
      * 状态：0：待接收 1：同意 2：拒绝 3：取消

@@ -120,14 +120,14 @@ const Content2 = () => (
       label="宣传描述"
     />
 
-    {/*<ProFormUploadButton*/}
-    {/*    name="picture"*/}
-    {/*    label="图片"*/}
-    {/*/>*/}
-    {/*<ProFormUploadDragger*/}
-    {/*    name="video"*/}
-    {/*    label="视频"*/}
-    {/*/>*/}
+    <ProFormUploadButton
+        name="picture"
+        label="图片"
+    />
+    <ProFormUploadDragger
+        name="video"
+        label="视频"
+    />
   </ProForm>
 );
 

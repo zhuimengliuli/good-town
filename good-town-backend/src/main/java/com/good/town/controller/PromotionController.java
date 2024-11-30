@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.good.town.annotation.AuthCheck;
 import com.good.town.common.*;
+import com.good.town.constant.FileTypeConstant;
+import com.good.town.constant.RoleConstant;
 import com.good.town.constant.UserConstant;
 import com.good.town.exception.BusinessException;
 import com.good.town.exception.ThrowUtils;
@@ -14,6 +16,7 @@ import com.good.town.model.entity.Promotion;
 import com.good.town.model.entity.Town;
 import com.good.town.model.entity.User;
 import com.good.town.model.vo.PromotionVO;
+import com.good.town.service.FileService;
 import com.good.town.service.PromotionService;
 import com.good.town.service.TownService;
 import com.good.town.service.UserService;
@@ -43,6 +46,9 @@ public class PromotionController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private FileService fileService;
 
     // region 增删改查
 
@@ -75,6 +81,30 @@ public class PromotionController {
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         // 返回新写入的数据 id
         long newPromotionId = promotion.getId();
+        //根据数据 id,插入
+        String pictureName = RoleConstant.PROMOTION_ROLE+"_"+newPromotionId+"_"+ FileTypeConstant.PICTURE_TYPE;
+        String videoName = RoleConstant.PROMOTION_ROLE+"_"+ newPromotionId +"_"+FileTypeConstant.VIDEO_TYPE;
+        promotion.setPicture("");
+        promotion.setVideo("");
+        try{
+            if(!promotionAddRequest.getVideo().isEmpty()){
+                promotion.setPicture(fileService.UploadFile(videoName,promotionAddRequest.getVideo()));
+            }
+            if(!promotionAddRequest.getPicture().isEmpty()){
+                promotion.setPicture(fileService.UploadFile(pictureName,promotionAddRequest.getPicture()));
+            }
+        }catch(Exception e){
+            if(!promotion.getPicture().equals("")){
+                fileService.EraseByUrl(promotion.getPicture());
+            }
+            if(!promotion.getVideo().equals("")){
+                fileService.EraseByUrl(promotion.getVideo());
+            }
+            promotionService.removeById(promotion);
+            ThrowUtils.throwIf(true,ErrorCode.OPERATION_ERROR,e.getMessage());
+        }
+        result = promotionService.updateById(promotion);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(newPromotionId);
     }
 
@@ -98,6 +128,12 @@ public class PromotionController {
         // 仅本人或管理员可删除
         if (!oldPromotion.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+        }
+        if(oldPromotion.getPicture()!=null&&!oldPromotion.getPicture().equals("")){
+            fileService.EraseByUrl(oldPromotion.getPicture());
+        }
+        if(oldPromotion.getVideo()!=null && oldPromotion.getVideo().equals("")){
+            fileService.EraseByUrl(oldPromotion.getVideo());
         }
         // 操作数据库
         boolean result = promotionService.removeById(id);
@@ -126,6 +162,18 @@ public class PromotionController {
         Promotion oldPromotion = promotionService.getById(id);
         ThrowUtils.throwIf(oldPromotion == null, ErrorCode.NOT_FOUND_ERROR);
         // 操作数据库
+        String videoName =RoleConstant.PROMOTION_ROLE+"_"+id+"_"+FileTypeConstant.VIDEO_TYPE;
+        String pictureName =RoleConstant.PROMOTION_ROLE+ "_"+ id +"_"+FileTypeConstant.PICTURE_TYPE;
+        try{
+            if(!promotionUpdateRequest.getVideo().isEmpty()){
+                promotion.setPicture(fileService.UploadFile(videoName,promotionUpdateRequest.getVideo()));
+            }
+            if(!promotionUpdateRequest.getPicture().isEmpty()){
+                promotion.setPicture(fileService.UploadFile(pictureName,promotionUpdateRequest.getPicture()));
+            }
+        }catch(Exception e){
+            ThrowUtils.throwIf(true,ErrorCode.OPERATION_ERROR,e.getMessage());
+        }
         boolean result = promotionService.updateById(promotion);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
@@ -238,6 +286,18 @@ public class PromotionController {
         // 操作数据库
         boolean result = promotionService.updateById(promotion);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        String pictureName = RoleConstant.PROMOTION_ROLE+"_"+id+"_"+ FileTypeConstant.PICTURE_TYPE;
+        String videoName = RoleConstant.PROMOTION_ROLE+"_"+ id +"_"+FileTypeConstant.VIDEO_TYPE;
+        try{
+            if(!promotionEditRequest.getVideo().isEmpty()){
+                promotion.setPicture(fileService.UploadFile(videoName,promotionEditRequest.getVideo()));
+            }
+            if(!promotionEditRequest.getPicture().isEmpty()){
+                promotion.setPicture(fileService.UploadFile(pictureName,promotionEditRequest.getPicture()));
+            }
+        }catch(Exception e){
+            ThrowUtils.throwIf(true,ErrorCode.OPERATION_ERROR,e.getMessage());
+        }
         return ResultUtils.success(true);
     }
 

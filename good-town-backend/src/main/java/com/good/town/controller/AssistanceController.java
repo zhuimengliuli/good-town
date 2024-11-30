@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.good.town.annotation.AuthCheck;
 import com.good.town.common.*;
+import com.good.town.constant.FileTypeConstant;
+import com.good.town.constant.RoleConstant;
 import com.good.town.constant.UserConstant;
 import com.good.town.exception.BusinessException;
 import com.good.town.exception.ThrowUtils;
@@ -15,12 +17,15 @@ import com.good.town.model.entity.Assistance;
 import com.good.town.model.entity.User;
 import com.good.town.model.vo.AssistanceVO;
 import com.good.town.service.AssistanceService;
+import com.good.town.service.FileService;
 import com.good.town.service.UserService;
+import javassist.expr.NewArray;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.management.relation.Role;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,6 +45,9 @@ public class AssistanceController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private FileService fileService;
 
     // region 增删改查
 
@@ -64,7 +72,31 @@ public class AssistanceController {
         boolean result = assistanceService.save(assistance);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         // 返回新写入的数据 id
-        long newAssistanceId = assistance.getId();
+        Long newAssistanceId = assistance.getId();
+        //根据数据 id,插入
+        String pictureName = RoleConstant.ASSISTANCE_ROLE+"_"+newAssistanceId+"_"+ FileTypeConstant.PICTURE_TYPE;
+        String videoName = RoleConstant.ASSISTANCE_ROLE+"_"+ newAssistanceId+"_"+FileTypeConstant.VIDEO_TYPE;
+        assistance.setPicture("");
+        assistance.setVideo("");
+        try{
+            if(!assistanceAddRequest.getVideo().isEmpty()){
+                assistance.setPicture(fileService.UploadFile(videoName,assistanceAddRequest.getVideo()));
+            }
+            if(!assistanceAddRequest.getPicture().isEmpty()){
+                assistance.setPicture(fileService.UploadFile(pictureName,assistanceAddRequest.getPicture()));
+            }
+        }catch(Exception e){
+            if(!assistance.getPicture().equals("")){
+                fileService.EraseByUrl(assistance.getPicture());
+            }
+            if(!assistance.getVideo().equals("")){
+                fileService.EraseByUrl(assistance.getVideo());
+            }
+            assistanceService.removeById(assistance);
+            ThrowUtils.throwIf(true,ErrorCode.OPERATION_ERROR,e.getMessage());
+        }
+        result = assistanceService.updateById(assistance);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(newAssistanceId);
     }
 
@@ -88,6 +120,12 @@ public class AssistanceController {
         // 仅本人或管理员可删除
         if (!oldAssistance.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+        }
+        if(oldAssistance.getPicture()!=null&&!oldAssistance.getPicture().equals("")){
+            fileService.EraseByUrl(oldAssistance.getPicture());
+        }
+        if(oldAssistance.getVideo()!=null && oldAssistance.getVideo().equals("")){
+            fileService.EraseByUrl(oldAssistance.getVideo());
         }
         // 操作数据库
         boolean result = assistanceService.removeById(id);
@@ -116,6 +154,18 @@ public class AssistanceController {
         Assistance oldAssistance = assistanceService.getById(id);
         ThrowUtils.throwIf(oldAssistance == null, ErrorCode.NOT_FOUND_ERROR);
         // 操作数据库
+        String videoName =RoleConstant.PROMOTION_ROLE+"_"+id+"_"+FileTypeConstant.VIDEO_TYPE;
+        String pictureName =RoleConstant.PROMOTION_ROLE+ "_"+ id +"_"+FileTypeConstant.PICTURE_TYPE;
+        try{
+            if(!assistanceUpdateRequest.getVideo().isEmpty()){
+                assistance.setPicture(fileService.UploadFile(videoName,assistanceUpdateRequest.getVideo()));
+            }
+            if(!assistanceUpdateRequest.getPicture().isEmpty()){
+                assistance.setPicture(fileService.UploadFile(pictureName,assistanceUpdateRequest.getPicture()));
+            }
+        }catch(Exception e){
+            ThrowUtils.throwIf(true,ErrorCode.OPERATION_ERROR,e.getMessage());
+        }
         boolean result = assistanceService.updateById(assistance);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
