@@ -37,6 +37,9 @@ public class FileServiceImpl implements FileService {
     public String UploadFile(String fileName, MultipartFile file) throws Exception{
         String originalFileName =  file.getOriginalFilename();
         String fileExtension =  originalFileName.substring(originalFileName.lastIndexOf(".")+1);
+        if(!fileExtension.isEmpty()){
+            fileName = fileName+"."+fileExtension;
+        }
         String contentType = file.getContentType();
         long fileSize =file.getSize();
         minioClient.putObject(PutObjectArgs.builder().contentType(contentType).bucket(this.minioConfig.getBucket()).object(fileName).stream(file.getInputStream(),fileSize,-1).build());
