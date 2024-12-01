@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface TownService extends IService<Town> {
 
+    public void initTownInfo(String path);
     /**
      * 校验数据
      *

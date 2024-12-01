@@ -4,6 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.good.town.common.ErrorCode;
 import com.good.town.constant.CommonConstant;
 import com.good.town.exception.ThrowUtils;
@@ -18,13 +20,17 @@ import com.good.town.model.vo.UserVO;
 import com.good.town.service.TownService;
 import com.good.town.service.UserService;
 import com.good.town.utils.SqlUtils;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +45,47 @@ public class TownServiceImpl extends ServiceImpl<TownMapper, Town> implements To
 
     @Resource
     private UserService userService;
+    @Data
+    public static class ProvinceCityData{
+        @JsonProperty("name")
+        private String provinceName;
+
+        @JsonProperty("city")
+        private List<City> cityList;
+
+        @Data
+        public static class City {
+            @JsonProperty("name")
+            private String cityName;
+
+            @JsonProperty("area")
+            private List<String> areaList;
+        }
+    }
+    @Override
+    public void initTownInfo(String path) {
+        File jsonFile = new File(path);
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<ProvinceCityData> provinceCityDataList = new ArrayList<>();
+        try{
+            provinceCityDataList = objectMapper.readValue(jsonFile, objectMapper.getTypeFactory().constructCollectionType(List.class, ProvinceCityData.class));
+        }catch(Exception e){
+            e.printStackTrace();
+            log.warn("Init town info error");
+        }
+
+        for (ProvinceCityData provinceCityData : provinceCityDataList) {
+            for (ProvinceCityData.City city : provinceCityData.getCityList()) {
+                for (String area : city.getAreaList()) {
+                    Town town = new Town();
+                    town.setTownName(area);
+                    town.setProvince(provinceCityData.getProvinceName());
+                    town.setCity(city.getCityName());
+                    save(town);
+                }
+            }
+        }
+    }
 
     /**
      * 校验数据

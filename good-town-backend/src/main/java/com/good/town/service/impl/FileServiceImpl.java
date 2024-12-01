@@ -33,6 +33,7 @@ public class FileServiceImpl implements FileService {
         }
     }
 
+    @Override
     public String UploadFile(String fileName, MultipartFile file) throws Exception{
         String originalFileName =  file.getOriginalFilename();
         String fileExtension =  originalFileName.substring(originalFileName.lastIndexOf(".")+1);
@@ -41,6 +42,8 @@ public class FileServiceImpl implements FileService {
         minioClient.putObject(PutObjectArgs.builder().contentType(contentType).bucket(this.minioConfig.getBucket()).object(fileName).stream(file.getInputStream(),fileSize,-1).build());
         return this.minioConfig.getServer()+"/"+this.minioConfig.getBucket()+"/"+fileName;
     }
+
+    @Override
     public void EraseByUrl(String fileUrl){
         try{
             URL url =new URL(fileUrl);
