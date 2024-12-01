@@ -34,15 +34,6 @@ public class PromotionUpdateRequest implements Serializable {
      */
     private String description;
 
-    /**
-     * 图片
-     */
-    private MultipartFile picture;
-
-    /**
-     * 视频
-     */
-    private MultipartFile video;
 
     /**
      * 状态：0：已发布无助力 1：已发布有助力

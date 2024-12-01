@@ -4,15 +4,46 @@ import request from "@/libs/request";
 
 /** addAssistance POST /api/assistance/add */
 export async function addAssistanceUsingPost(
-  body: API.AssistanceAddRequest,
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.addAssistanceUsingPOSTParams,
+  body: {},
+  picture?: File,
+  video?: File,
   options?: { [key: string]: any }
 ) {
+  const formData = new FormData();
+
+  if (picture) {
+    formData.append("picture", picture);
+  }
+
+  if (video) {
+    formData.append("video", video);
+  }
+
+  Object.keys(body).forEach((ele) => {
+    const item = (body as any)[ele];
+
+    if (item !== undefined && item !== null) {
+      if (typeof item === "object" && !(item instanceof File)) {
+        if (item instanceof Array) {
+          item.forEach((f) => formData.append(ele, f || ""));
+        } else {
+          formData.append(ele, JSON.stringify(item));
+        }
+      } else {
+        formData.append(ele, item);
+      }
+    }
+  });
+
   return request<API.BaseResponseLong_>("/api/assistance/add", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+    params: {
+      ...params,
     },
-    data: body,
+    data: formData,
+    requestType: "form",
     ...(options || {}),
   });
 }
@@ -34,15 +65,46 @@ export async function deleteAssistanceUsingPost(
 
 /** editAssistance POST /api/assistance/edit */
 export async function editAssistanceUsingPost(
-  body: API.AssistanceEditRequest,
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.editAssistanceUsingPOSTParams,
+  body: {},
+  picture?: File,
+  video?: File,
   options?: { [key: string]: any }
 ) {
+  const formData = new FormData();
+
+  if (picture) {
+    formData.append("picture", picture);
+  }
+
+  if (video) {
+    formData.append("video", video);
+  }
+
+  Object.keys(body).forEach((ele) => {
+    const item = (body as any)[ele];
+
+    if (item !== undefined && item !== null) {
+      if (typeof item === "object" && !(item instanceof File)) {
+        if (item instanceof Array) {
+          item.forEach((f) => formData.append(ele, f || ""));
+        } else {
+          formData.append(ele, JSON.stringify(item));
+        }
+      } else {
+        formData.append(ele, item);
+      }
+    }
+  });
+
   return request<API.BaseResponseBoolean_>("/api/assistance/edit", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+    params: {
+      ...params,
     },
-    data: body,
+    data: formData,
+    requestType: "form",
     ...(options || {}),
   });
 }
@@ -148,15 +210,46 @@ export async function listMyAssistanceVoByPageUsingPost(
 
 /** updateAssistance POST /api/assistance/update */
 export async function updateAssistanceUsingPost(
-  body: API.AssistanceUpdateRequest,
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.updateAssistanceUsingPOSTParams,
+  body: {},
+  picture?: File,
+  video?: File,
   options?: { [key: string]: any }
 ) {
+  const formData = new FormData();
+
+  if (picture) {
+    formData.append("picture", picture);
+  }
+
+  if (video) {
+    formData.append("video", video);
+  }
+
+  Object.keys(body).forEach((ele) => {
+    const item = (body as any)[ele];
+
+    if (item !== undefined && item !== null) {
+      if (typeof item === "object" && !(item instanceof File)) {
+        if (item instanceof Array) {
+          item.forEach((f) => formData.append(ele, f || ""));
+        } else {
+          formData.append(ele, JSON.stringify(item));
+        }
+      } else {
+        formData.append(ele, item);
+      }
+    }
+  });
+
   return request<API.BaseResponseBoolean_>("/api/assistance/update", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+    params: {
+      ...params,
     },
-    data: body,
+    data: formData,
+    requestType: "form",
     ...(options || {}),
   });
 }

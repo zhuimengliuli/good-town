@@ -56,18 +56,27 @@ const contentStyle: React.CSSProperties = {
 
 
 const Content2 = () => (
-  <ProForm<API.PromotionAddRequest>
+  <ProForm<API.addPromotionUsingPOSTParams>
     layout="horizontal"
     onFinish={async (values) => {
-      console.log("Form values:", values); // 添加日志记录
-      try {
-        const res = addPromotionUsingPost(values);
-        if (res.data) {
-          message.success("编辑宣传成功");
+        const { picture, video, ...formDataValues } = values; // 拆分文件字段和其他字段
+
+        // 将普通字段（API.addPromotionUsingPOSTParams字段）保留为JSON对象
+        const params: API.addPromotionUsingPOSTParams = { ...formDataValues };
+
+        // 获取实际的 File 对象
+        const pictureFile = picture?.[0]?.originFileObj;
+        const videoFile = video?.[0]?.originFileObj;
+
+        try {
+            const res = await addPromotionUsingPost(params, {}, pictureFile, videoFile);
+
+            if (res.data) {
+                message.success("发布宣传成功");
+            }
+        } catch (e: any) {
+            message.error("发布宣传失败，" + e.message);
         }
-      } catch (e: any) {
-        message.error("编辑宣传失败，" + e.message);
-      }
     }}
     submitter={{
       render: (props, doms) => {

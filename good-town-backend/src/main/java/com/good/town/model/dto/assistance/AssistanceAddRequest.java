@@ -29,15 +29,6 @@ public class AssistanceAddRequest implements Serializable {
      */
     private String description;
 
-    /**
-     * 助力介绍图片
-     */
-    private MultipartFile picture;
-
-    /**
-     * 助力介绍视频
-     */
-    private MultipartFile video;
 
     private static final long serialVersionUID = 1L;
 }

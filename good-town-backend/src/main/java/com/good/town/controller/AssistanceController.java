@@ -21,8 +21,11 @@ import com.good.town.service.FileService;
 import com.good.town.service.UserService;
 import javassist.expr.NewArray;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.management.relation.Role;
@@ -59,7 +62,10 @@ public class AssistanceController {
      * @return
      */
     @PostMapping("/add")
-    public BaseResponse<Long> addAssistance(@RequestBody AssistanceAddRequest assistanceAddRequest, HttpServletRequest request) {
+    public BaseResponse<Long> addAssistance(@ModelAttribute AssistanceAddRequest assistanceAddRequest,
+                                            @RequestPart(value="picture",required = false)MultipartFile picture,
+                                            @RequestPart(value ="video", required = false)MultipartFile video,
+                                            HttpServletRequest request) {
         ThrowUtils.throwIf(assistanceAddRequest == null, ErrorCode.PARAMS_ERROR);
         Assistance assistance = new Assistance();
         BeanUtils.copyProperties(assistanceAddRequest, assistance);
@@ -79,11 +85,11 @@ public class AssistanceController {
         assistance.setPicture("");
         assistance.setVideo("");
         try{
-            if(!assistanceAddRequest.getVideo().isEmpty()){
-                assistance.setPicture(fileService.UploadFile(videoName,assistanceAddRequest.getVideo()));
+            if(video!=null&&!video.isEmpty()){
+                assistance.setPicture(fileService.UploadFile(videoName,video));
             }
-            if(!assistanceAddRequest.getPicture().isEmpty()){
-                assistance.setPicture(fileService.UploadFile(pictureName,assistanceAddRequest.getPicture()));
+            if(picture!=null&&!picture.isEmpty()){
+                assistance.setPicture(fileService.UploadFile(pictureName,picture));
             }
         }catch(Exception e){
             if(!assistance.getPicture().equals("")){
@@ -141,7 +147,9 @@ public class AssistanceController {
      */
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> updateAssistance(@RequestBody AssistanceUpdateRequest assistanceUpdateRequest) {
+    public BaseResponse<Boolean> updateAssistance(@ModelAttribute AssistanceUpdateRequest assistanceUpdateRequest,
+                                                  @RequestPart(value="picture",required = false)MultipartFile picture,
+                                                  @RequestPart(value ="video", required = false)MultipartFile video) {
         if (assistanceUpdateRequest == null || assistanceUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -157,11 +165,11 @@ public class AssistanceController {
         String videoName =RoleConstant.PROMOTION_ROLE+"_"+id+"_"+FileTypeConstant.VIDEO_TYPE;
         String pictureName =RoleConstant.PROMOTION_ROLE+ "_"+ id +"_"+FileTypeConstant.PICTURE_TYPE;
         try{
-            if(!assistanceUpdateRequest.getVideo().isEmpty()){
-                assistance.setPicture(fileService.UploadFile(videoName,assistanceUpdateRequest.getVideo()));
+            if(video!=null&&!video.isEmpty()){
+                assistance.setPicture(fileService.UploadFile(videoName,video));
             }
-            if(!assistanceUpdateRequest.getPicture().isEmpty()){
-                assistance.setPicture(fileService.UploadFile(pictureName,assistanceUpdateRequest.getPicture()));
+            if(picture!=null&&!picture.isEmpty()){
+                assistance.setPicture(fileService.UploadFile(pictureName,picture));
             }
         }catch(Exception e){
             ThrowUtils.throwIf(true,ErrorCode.OPERATION_ERROR,e.getMessage());
@@ -258,7 +266,9 @@ public class AssistanceController {
      * @return
      */
     @PostMapping("/edit")
-    public BaseResponse<Boolean> editAssistance(@RequestBody AssistanceEditRequest assistanceEditRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> editAssistance(@ModelAttribute AssistanceEditRequest assistanceEditRequest,
+                                                @RequestPart(value="picture",required = false)MultipartFile picture,
+                                                @RequestPart(value ="video", required = false)MultipartFile video, HttpServletRequest request) {
         if (assistanceEditRequest == null || assistanceEditRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -276,6 +286,18 @@ public class AssistanceController {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         // 操作数据库
+        String videoName =RoleConstant.PROMOTION_ROLE+"_"+id+"_"+FileTypeConstant.VIDEO_TYPE;
+        String pictureName =RoleConstant.PROMOTION_ROLE+ "_"+ id +"_"+FileTypeConstant.PICTURE_TYPE;
+        try{
+            if(video!=null&&!video.isEmpty()){
+                assistance.setPicture(fileService.UploadFile(videoName,video));
+            }
+            if(picture!=null&&!picture.isEmpty()){
+                assistance.setPicture(fileService.UploadFile(pictureName,picture));
+            }
+        }catch(Exception e){
+            ThrowUtils.throwIf(true,ErrorCode.OPERATION_ERROR,e.getMessage());
+        }
         boolean result = assistanceService.updateById(assistance);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);

@@ -1,4 +1,17 @@
 declare namespace API {
+  type addAssistanceUsingPOSTParams = {
+    description?: string;
+    promotionId?: number;
+    userId?: number;
+  };
+
+  type addPromotionUsingPOSTParams = {
+    description?: string;
+    themeName?: string;
+    townName?: string;
+    type?: string;
+  };
+
   type Assistance = {
     createTime?: string;
     description?: string;
@@ -9,22 +22,7 @@ declare namespace API {
     state?: number;
     updateTime?: string;
     userId?: number;
-  };
-
-  type AssistanceAddRequest = {
-    description?: string;
-    picture?: string;
-    promotionId?: number;
-    userId?: number;
-  };
-
-  type AssistanceEditRequest = {
-    description?: string;
-    id?: number;
-    picture?: string;
-    promotionId?: number;
-    state?: number;
-    userId?: number;
+    video?: string;
   };
 
   type AssistanceQueryRequest = {
@@ -38,15 +36,6 @@ declare namespace API {
     searchText?: string;
     sortField?: string;
     sortOrder?: string;
-    state?: number;
-    userId?: number;
-  };
-
-  type AssistanceUpdateRequest = {
-    description?: string;
-    id?: number;
-    picture?: string;
-    promotionId?: number;
     state?: number;
     userId?: number;
   };
@@ -173,6 +162,22 @@ declare namespace API {
 
   type DeleteRequest = {
     id?: number;
+  };
+
+  type editAssistanceUsingPOSTParams = {
+    description?: string;
+    id?: number;
+    promotionId?: number;
+    state?: number;
+    userId?: number;
+  };
+
+  type editPromotionUsingPOSTParams = {
+    description?: string;
+    id?: number;
+    state?: number;
+    themeName?: string;
+    type?: string;
   };
 
   type getAssistanceUserCountUsingGETParams = {
@@ -370,25 +375,6 @@ declare namespace API {
     video?: string;
   };
 
-  type PromotionAddRequest = {
-    description?: string;
-    picture?: string[];
-    themeName?: string;
-    townName?: string;
-    type?: string;
-    video?: string[];
-  };
-
-  type PromotionEditRequest = {
-    description?: string;
-    id?: number;
-    picture?: string[];
-    state?: number;
-    themeName?: string;
-    type?: string;
-    video?: string[];
-  };
-
   type PromotionQueryRequest = {
     current?: number;
     description?: string;
@@ -402,16 +388,6 @@ declare namespace API {
     townId?: number;
     type?: string;
     userId?: number;
-  };
-
-  type PromotionUpdateRequest = {
-    description?: string;
-    id?: number;
-    picture?: string;
-    state?: number;
-    themeName?: string;
-    type?: string;
-    video?: string;
   };
 
   type PromotionVO = {
@@ -469,6 +445,22 @@ declare namespace API {
     updateTime?: string;
     user?: UserVO;
     userId?: number;
+  };
+
+  type updateAssistanceUsingPOSTParams = {
+    description?: string;
+    id?: number;
+    promotionId?: number;
+    state?: number;
+    userId?: number;
+  };
+
+  type updatePromotionUsingPOSTParams = {
+    description?: string;
+    id?: number;
+    state?: number;
+    themeName?: string;
+    type?: string;
   };
 
   type User = {

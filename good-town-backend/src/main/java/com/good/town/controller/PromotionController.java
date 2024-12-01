@@ -23,6 +23,7 @@ import com.good.town.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -60,8 +61,11 @@ public class PromotionController {
      * @return
      */
     @PostMapping("/add")
-    public BaseResponse<Long> addPromotion(@RequestBody PromotionAddRequest promotionAddRequest, HttpServletRequest request) {
+    public BaseResponse<Long> addPromotion(@ModelAttribute PromotionAddRequest promotionAddRequest,
+                                           @RequestPart(value="picture",required = false) MultipartFile picture,
+                                           @RequestPart(value ="video", required = false)MultipartFile video, HttpServletRequest request) {
         ThrowUtils.throwIf(promotionAddRequest == null, ErrorCode.PARAMS_ERROR);
+
         Promotion promotion = new Promotion();
         BeanUtils.copyProperties(promotionAddRequest, promotion);
         // 将乡镇名转化为乡镇ID
@@ -87,11 +91,11 @@ public class PromotionController {
         promotion.setPicture("");
         promotion.setVideo("");
         try{
-            if(!promotionAddRequest.getVideo().isEmpty()){
-                promotion.setPicture(fileService.UploadFile(videoName,promotionAddRequest.getVideo()));
+            if(video!=null&&!video.isEmpty()){;
+                promotion.setVideo(fileService.UploadFile(videoName,video));
             }
-            if(!promotionAddRequest.getPicture().isEmpty()){
-                promotion.setPicture(fileService.UploadFile(pictureName,promotionAddRequest.getPicture()));
+            if(picture!=null&&!picture.isEmpty()){
+                promotion.setPicture(fileService.UploadFile(pictureName,picture));
             }
         }catch(Exception e){
             if(!promotion.getPicture().equals("")){
@@ -101,8 +105,10 @@ public class PromotionController {
                 fileService.EraseByUrl(promotion.getVideo());
             }
             promotionService.removeById(promotion);
+            e.printStackTrace();
             ThrowUtils.throwIf(true,ErrorCode.OPERATION_ERROR,e.getMessage());
         }
+
         result = promotionService.updateById(promotion);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(newPromotionId);
@@ -149,7 +155,9 @@ public class PromotionController {
      */
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> updatePromotion(@RequestBody PromotionUpdateRequest promotionUpdateRequest) {
+    public BaseResponse<Boolean> updatePromotion(@ModelAttribute PromotionUpdateRequest promotionUpdateRequest,
+                                                 @RequestPart(value="picture",required = false)MultipartFile picture,
+                                                 @RequestPart(value ="video", required = false)MultipartFile video) {
         if (promotionUpdateRequest == null || promotionUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -165,11 +173,11 @@ public class PromotionController {
         String videoName =RoleConstant.PROMOTION_ROLE+"_"+id+"_"+FileTypeConstant.VIDEO_TYPE;
         String pictureName =RoleConstant.PROMOTION_ROLE+ "_"+ id +"_"+FileTypeConstant.PICTURE_TYPE;
         try{
-            if(!promotionUpdateRequest.getVideo().isEmpty()){
-                promotion.setPicture(fileService.UploadFile(videoName,promotionUpdateRequest.getVideo()));
+            if(video!=null&&!video.isEmpty()){
+                promotion.setPicture(fileService.UploadFile(videoName,video));
             }
-            if(!promotionUpdateRequest.getPicture().isEmpty()){
-                promotion.setPicture(fileService.UploadFile(pictureName,promotionUpdateRequest.getPicture()));
+            if(picture!=null&&!picture.isEmpty()){
+                promotion.setPicture(fileService.UploadFile(pictureName,picture));
             }
         }catch(Exception e){
             ThrowUtils.throwIf(true,ErrorCode.OPERATION_ERROR,e.getMessage());
@@ -266,7 +274,9 @@ public class PromotionController {
      * @return
      */
     @PostMapping("/edit")
-    public BaseResponse<Boolean> editPromotion(@RequestBody PromotionEditRequest promotionEditRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> editPromotion(@ModelAttribute PromotionEditRequest promotionEditRequest,
+                                               @RequestPart(value="picture",required = false)MultipartFile picture,
+                                               @RequestPart(value ="video", required = false)MultipartFile video, HttpServletRequest request) {
         if (promotionEditRequest == null || promotionEditRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -289,11 +299,11 @@ public class PromotionController {
         String pictureName = RoleConstant.PROMOTION_ROLE+"_"+id+"_"+ FileTypeConstant.PICTURE_TYPE;
         String videoName = RoleConstant.PROMOTION_ROLE+"_"+ id +"_"+FileTypeConstant.VIDEO_TYPE;
         try{
-            if(!promotionEditRequest.getVideo().isEmpty()){
-                promotion.setPicture(fileService.UploadFile(videoName,promotionEditRequest.getVideo()));
+            if(video!=null&&!video.isEmpty()){
+                promotion.setPicture(fileService.UploadFile(videoName,video));
             }
-            if(!promotionEditRequest.getPicture().isEmpty()){
-                promotion.setPicture(fileService.UploadFile(pictureName,promotionEditRequest.getPicture()));
+            if(picture!=null&&!picture.isEmpty()){
+                promotion.setPicture(fileService.UploadFile(pictureName,picture));
             }
         }catch(Exception e){
             ThrowUtils.throwIf(true,ErrorCode.OPERATION_ERROR,e.getMessage());

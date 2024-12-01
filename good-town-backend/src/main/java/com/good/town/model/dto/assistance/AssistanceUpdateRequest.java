@@ -34,15 +34,6 @@ public class AssistanceUpdateRequest implements Serializable {
      */
     private String description;
 
-    /**
-     * 助力介绍图片
-     */
-    private MultipartFile picture;
-
-    /**
-     * 助力介绍视频
-     */
-    private MultipartFile video;
 
     /**
      * 状态：0：待接收 1：同意 2：拒绝 3：取消

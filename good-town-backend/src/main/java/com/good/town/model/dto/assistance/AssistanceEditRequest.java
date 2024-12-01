@@ -33,10 +33,6 @@ public class AssistanceEditRequest implements Serializable {
      */
     private String description;
 
-    /**
-     * 助力介绍图片
-     */
-    private String picture;
 
     /**
      * 助力状态

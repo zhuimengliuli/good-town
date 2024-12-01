@@ -24,15 +24,6 @@ public class PromotionAddRequest implements Serializable {
      */
     private String description;
 
-    /**
-     * 图片
-     */
-    private MultipartFile picture;
-
-    /**
-     * 视频
-     */
-    private MultipartFile video;
 
     /**
      * 宣传类型
