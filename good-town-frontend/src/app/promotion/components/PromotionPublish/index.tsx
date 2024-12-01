@@ -14,6 +14,7 @@ import { addPromotionUsingPost } from "@/api/promotionController";
 import { Col, message, Row, Space } from "antd";
 import { useSelector } from "react-redux";
 import { RootState } from "@/stores";
+import { TOWN_LIST } from "@/app/constants/town";
 
 /**
  * 发布宣传
@@ -22,18 +23,17 @@ import { RootState } from "@/stores";
  */
 const PromotionPublish: React.FC<Props> = (props) => {
 
-    const [townName, setTownName] = React.useState<string>("潜山"); // 城镇名称
+    const [townName, setTownName] = React.useState<string>("海淀"); // 城镇名称
     const loginUser = useSelector((state: RootState) => state.loginUser);
 
     return (
-        //TODO: fix bugs here?
-        <ProForm<API.editPromotionUsingPOSTParams>
+        <ProForm<API.addPromotionUsingPOSTParams>
             layout="horizontal"
             onFinish={async (values) => {
                 const { picture, video, ...formDataValues } = values; // 拆分文件字段和其他字段
 
                 // 将普通字段（API.addPromotionUsingPOSTParams字段）保留为JSON对象
-                const params: API.editAssistanceUsingPOSTParams = { ...formDataValues, townName };
+                const params: API.addAssistanceUsingPOSTParams = { ...formDataValues, townName };
 
                 // 获取实际的 File 对象
                 const pictureFile = picture?.[0]?.originFileObj;
@@ -87,29 +87,13 @@ const PromotionPublish: React.FC<Props> = (props) => {
             />
             <ProFormCascader
                 width="md"
-                request={async () => [
-                    {
-                        value: '安徽',
-                        label: '安徽',
-                        children: [
-                            { value: '安庆', label: '安庆', children: [{ value: '潜山', label: '潜山' }, { value: '望江', label: '望江' }] },
-                        ],
-                    },
-                    {
-                        value: '北京',
-                        label: '北京',
-                        children: [
-                            { value: '海淀', label: '海淀', children: [{ value: '西土城', label: '西土城' }] },
-                        ],
-                    },
-                ]}
+                request={async () => TOWN_LIST}
                 name="townName"
                 label="区域"
-                initialValue={['安徽', '安庆', '潜山']}
+                initialValue={['北京市', '北京市', '海淀区']}
                 fieldProps={{
                     onChange: (value, selectedOptions) => {
                         setTownName(value[value.length - 1]);
-                        console.log(value[value.length - 1]);
                     },
                 }}
             />
