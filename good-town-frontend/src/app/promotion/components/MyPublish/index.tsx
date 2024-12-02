@@ -68,17 +68,18 @@ const MyPublish: React.FC = () => {
       const myGetPromotionList = await listMyPromotionVoByPageUsingPost({
         pageSize: pageSize,
       });
-        console.log("item", myGetPromotionList.data.records[0]);
+      if (myGetPromotionList.data.records.length > 0) {
         setMyAssistanceList(myGetPromotionList.data.records[0].assistanceList
-            .filter((item: API.AssistanceVO) => item.state === 1)
-            .map((item: API.AssistanceVO) => item)
+          .filter((item: API.AssistanceVO) => item.state === 1)
+          .map((item: API.AssistanceVO) => item)
         );
         setMyUndoAssistanceList(myGetPromotionList.data.records[0].assistanceList
-            .filter((item: API.AssistanceVO) => item.state === 0)
-            .map((item: API.AssistanceVO) => item)
+          .filter((item: API.AssistanceVO) => item.state === 0)
+          .map((item: API.AssistanceVO) => item)
         );
-      setMyPromotionList(myGetPromotionList.data.records);
-    console.log(myGetPromotionList.data.records[0].assistanceList);
+        
+      }setMyPromotionList(myGetPromotionList.data.records);
+
     } catch (e: any) {
       message.error("获取宣传信息失败" + e.message);
     }
@@ -115,7 +116,10 @@ const MyPublish: React.FC = () => {
             pageSize: 15,
         });
       setMyPromotionList(myGetPromotionList.data.records);
+      console.log(myPromotionList);
         
+      setCurrentPage(page);
+      
       setMyAssistanceList(myPromotionList?.[page - 1].assistanceList
             ?.filter((item: API.AssistanceVO) => item.state === 1)
             .map((item: API.AssistanceVO) => item)
@@ -127,21 +131,26 @@ const MyPublish: React.FC = () => {
     //   setMyAssistUserList(myPromotionList?.[page - 1].assistanceList?.map((item: API.AssistanceVO) => {
     //       return item.user || {};
     //   }));
-        setCurrentPage(page);
+        
         setCurrentUserIndex(0);
     };
 
     const [currentUserIndex, setCurrentUserIndex] = useState(0);
     const onAgree = async (index: number) => {
-        try {
-            const res = await editAssistanceUsingPost({
-                id: myUndoAssistanceList?.[index].id,
-                state: 1,
-            });
+      try {
+        const values = {
+          id: myUndoAssistanceList?.[index].id,
+          state: 1,
+        };
+        const { ...formDataValues } = values; // 拆分文件字段和其他字段
+        const params: API.editAssistanceUsingPOSTParams = { ...formDataValues };
+        const res = await editAssistanceUsingPost(params, {});  
             if (res.data) {
-                message.success("确认同意");
+              message.success("确认同意");
+              handlePageChange(currentPage);
             }
-            handlePageChange(currentPage);
+        
+            
         } catch (e: any) {
             message.error("同意失败，" + e.message);
         }
@@ -149,17 +158,22 @@ const MyPublish: React.FC = () => {
         
     };
     const onReject = async (index: number) => {
-        try {
-            const res = await editAssistanceUsingPost({
-                id: myUndoAssistanceList?.[index].id,
-                state: 2,
-            });
+      try {
+          const values = {
+            id: myUndoAssistanceList?.[index].id,
+            state: 2,
+          };
+          const { ...formDataValues } = values; // 拆分文件字段和其他字段
+          const params: API.editAssistanceUsingPOSTParams = { ...formDataValues };
+          const res = await editAssistanceUsingPost(params, {});  
+
             if (res.data) {
-                message.success("确认同意");
+              message.success("确认拒绝");
+              handlePageChange(currentPage);
             }
-            handlePageChange(currentPage);
+            
         } catch (e: any) {
-            message.error("同意失败，" + e.message);
+            message.error("拒绝失败，" + e.message);
         }
         onClose();
         
@@ -250,14 +264,14 @@ const MyPublish: React.FC = () => {
   const Content1 = () => (
     <div>
       <Paragraph>
-        <h3>{myPromotionList?.[currentPage - 1].themeName ?? "暂无数据"}</h3>
-        <h5>{myPromotionList?.[currentPage - 1].type ?? "暂无数据"}</h5>
-        <p>{myPromotionList?.[currentPage - 1].description ?? "暂无数据"}</p>
+        <h3>{myPromotionList?.[currentPage - 1]?.themeName ?? "暂无数据"}</h3>
+        <h5>{myPromotionList?.[currentPage - 1]?.type ?? "暂无数据"}</h5>
+        <p>{myPromotionList?.[currentPage - 1]?.description ?? "暂无数据"}</p>
 
         <Carousel>
           <div>
             <h3 style={contentStyle}>
-              {myPromotionList?.[currentPage - 1].picture ?
+              {myPromotionList?.[currentPage - 1]?.picture ?
                 (<img src={myPromotionList[currentPage - 1].picture} alt="宣传图片" style={{
                   maxWidth: '100%',
                   maxHeight: '100%',
@@ -268,7 +282,7 @@ const MyPublish: React.FC = () => {
           </div>
           <div>
             <h3 style={contentStyle}>
-              {myPromotionList?.[currentPage - 1].video ? (
+              {myPromotionList?.[currentPage - 1]?.video ? (
                 <video
                   src={myPromotionList[currentPage - 1].video}
                   style={{
@@ -446,7 +460,7 @@ const MyPublish: React.FC = () => {
                   <Button key="ok" type="primary" onClick={handleOk}> 确认 </Button>,]} >
               <Paragraph>
                   <h3>
-                      {myPromotionList?.[currentPage - 1].themeName ?? "暂无数据"}
+                      {myPromotionList?.[currentPage - 1]?.themeName ?? "暂无数据"}
                   </h3>
                   <h5>
                       {myUndoAssistanceList && myUndoAssistanceList.length > 0 ?

@@ -268,7 +268,7 @@ const AssistancePage: React.FC = () => {
                             <h4>发布</h4>
                         </Paragraph>
                         <Paragraph>
-                        <h2>{allPromotionList?.[currentIndex].themeName }</h2>
+                        <h2>{allPromotionList?.[currentIndex]?.themeName }</h2>
                     </Paragraph>
                     <Paragraph>
                         <ProForm
@@ -297,7 +297,7 @@ const AssistancePage: React.FC = () => {
                         </Paragraph>
                         <Paragraph>
                             
-                            <h2>{undoPromotionList?.[currentIndex].themeName }</h2>
+                            <h2>{undoPromotionList?.[currentIndex]?.themeName }</h2>
                         </Paragraph>
                     <Paragraph>
                         <ProForm
