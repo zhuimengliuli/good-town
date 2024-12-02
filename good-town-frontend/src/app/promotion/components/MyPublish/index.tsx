@@ -457,9 +457,20 @@ const MyPublish: React.FC = () => {
                           myUndoAssistanceList[currentUserIndex]?.description ?? "暂无数据" : "无数据"}
                   </p>
                   <Carousel>
-                      <div>
-                          <h3 style={contentStyle}> {myPromotionList?.[currentPage - 1].picture ?? "暂无数据"}
-                          </h3>
+            <div>
+              
+              <h3 style={contentStyle}>
+                {myUndoAssistanceList && myUndoAssistanceList.length > 0 ?
+                 ( myUndoAssistanceList[currentUserIndex]?.picture ?
+                (<img src={myUndoAssistanceList[currentUserIndex]?.picture} alt="宣传图片" style={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  objectFit: "contain"
+                }} />) :
+                    ("暂无数据")) : "无数据"
+                }
+              
+              </h3>
                       </div>
                   </Carousel>
               </Paragraph>
