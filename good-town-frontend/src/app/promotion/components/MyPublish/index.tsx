@@ -47,98 +47,16 @@ const { Paragraph } = Typography;
 
 const contentStyle: React.CSSProperties = {
   margin: 0,
-  height: "160px",
+  height: "540px",
   color: "#fff",
   lineHeight: "160px",
   textAlign: "center",
   background: "#364d79",
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 };
 
-
-const Content2 = () => (
-  <ProForm<API.addPromotionUsingPOSTParams>
-    layout="horizontal"
-    onFinish={async (values) => {
-        const { picture, video, ...formDataValues } = values; // 拆分文件字段和其他字段
-
-        // 将普通字段（API.addPromotionUsingPOSTParams字段）保留为JSON对象
-        const params: API.addPromotionUsingPOSTParams = { ...formDataValues };
-
-        // 获取实际的 File 对象
-        const pictureFile = picture?.[0]?.originFileObj;
-        const videoFile = video?.[0]?.originFileObj;
-
-        try {
-            const res = await addPromotionUsingPost(params, {}, pictureFile, videoFile);
-
-            if (res.data) {
-                message.success("发布宣传成功");
-            }
-        } catch (e: any) {
-            message.error("发布宣传失败，" + e.message);
-        }
-    }}
-    submitter={{
-      render: (props, doms) => {
-        return (
-          <Row>
-            <Col span={14} offset={4}>
-              <Space>{doms}</Space>
-            </Col>
-          </Row>
-        );
-      },
-    }}
-    autoFocusFirstInput
-  >
-    <ProFormText width="md" name="themeName" label="宣传主题名称" />
-    <ProFormSelect
-      name="type"
-      label="宣传类型"
-      width="md"
-      options={[
-        {
-          value: "农家院",
-          label: "农家院",
-        },
-        {
-          value: "自然风光秀丽",
-          label: "自然风光秀丽",
-        },
-        {
-          value: "古建筑",
-          label: "古建筑",
-        },
-        {
-          value: "土特产",
-          label: "土特产",
-        },
-        {
-          value: "特色小吃",
-          label: "特色小吃",
-        },
-        {
-          value: "民宿活动",
-          label: "民宿活动",
-        },
-      ]}
-    />
-    <ProFormTextArea
-      colProps={{ span: 24 }}
-      name="description"
-      label="宣传描述"
-    />
-
-    <ProFormUploadButton
-        name="picture"
-        label="图片"
-    />
-    <ProFormUploadDragger
-        name="video"
-        label="视频"
-    />
-  </ProForm>
-);
 
 const MyPublish: React.FC = () => {
   const [myPromotionList, setMyPromotionList] = useState<PromotionVO[]>();
@@ -196,7 +114,7 @@ const MyPublish: React.FC = () => {
         const myGetPromotionList = await listMyPromotionVoByPageUsingPost({
             pageSize: 15,
         });
-        setMyPromotionList(myGetPromotionList.data.records);
+      setMyPromotionList(myGetPromotionList.data.records);
         
       setMyAssistanceList(myPromotionList?.[page - 1].assistanceList
             ?.filter((item: API.AssistanceVO) => item.state === 1)
@@ -209,7 +127,6 @@ const MyPublish: React.FC = () => {
     //   setMyAssistUserList(myPromotionList?.[page - 1].assistanceList?.map((item: API.AssistanceVO) => {
     //       return item.user || {};
     //   }));
-      console.log(myPromotionList?.[page - 1].assistanceList);
         setCurrentPage(page);
         setCurrentUserIndex(0);
     };
@@ -340,12 +257,33 @@ const MyPublish: React.FC = () => {
         <Carousel>
           <div>
             <h3 style={contentStyle}>
-              {myPromotionList?.[currentPage - 1].picture ?? "暂无数据"}{" "}
+              {myPromotionList?.[currentPage - 1].picture ?
+                (<img src={myPromotionList[currentPage - 1].picture} alt="宣传图片" style={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  objectFit: "contain"
+                }} />) :
+                ("暂无数据")}
             </h3>
           </div>
           <div>
             <h3 style={contentStyle}>
-              {myPromotionList?.[currentPage - 1].video ?? "暂无数据"}{" "}
+              {myPromotionList?.[currentPage - 1].video ? (
+                <video
+                  src={myPromotionList[currentPage - 1].video}
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '100%',
+                    objectFit: 'contain'
+                  }}
+                  controls
+                >
+                  您的浏览器不支持 video 标签。
+                </video>
+              ) : (
+                "暂无数据"
+              )}
+
             </h3>
           </div>
         </Carousel>
@@ -385,18 +323,30 @@ const MyPublish: React.FC = () => {
   );
 
   const Content2 = () => (
-    <ProForm<API.PromotionEditRequest>
+    <ProForm<API.editPromotionUsingPOSTParams>
       layout="horizontal"
       onFinish={async (values) => {
+        // 传入promotion的id
         values.id = myPromotionList?.[currentPage - 1].id;
-        console.log("Form values:", values); // 添加日志记录
+
+        const { picture, video, ...formDataValues } = values; // 拆分文件字段和其他字段
+
+        // 将普通字段（API.addPromotionUsingPOSTParams字段）保留为JSON对象
+        const params: API.editPromotionUsingPOSTParams = { ...formDataValues };
+
+        // 获取实际的 File 对象
+        const pictureFile = picture?.[0]?.originFileObj;
+        const videoFile = video?.[0]?.originFileObj;
+
+        // 传入编辑的promotion的id
         try {
-          const res = editPromotionUsingPost(values);
-          if (res.data) {
-            message.success("编辑宣传成功");
-          }
+            const res = await editPromotionUsingPost(params, {}, pictureFile, videoFile);
+
+            if (res.data) {
+                message.success("发布宣传成功");
+            }
         } catch (e: any) {
-          message.error("编辑宣传失败，" + e.message);
+            message.error("发布宣传失败，" + e.message);
         }
       }}
       submitter={{
@@ -431,7 +381,7 @@ const MyPublish: React.FC = () => {
           },
           {
             value: "自然风光秀丽",
-            label: "护照",
+            label: "自然风光秀丽",
           },
           {
             value: "古建筑",
