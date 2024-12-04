@@ -11,38 +11,38 @@ export const menus = [
   {
     path: "/promotion",
     name: "我宣传",
-    access: ACCESS_ENUM.NOT_LOGIN,
+    access: ACCESS_ENUM.USER,
   },
   {
     path: "/assistance",
     name: "我助力",
-    access: ACCESS_ENUM.NOT_LOGIN,
+    access: ACCESS_ENUM.USER,
   },
   {
     path: "/admin",
     name: "管理",
-    access: ACCESS_ENUM.NOT_LOGIN,
+    access: ACCESS_ENUM.ADMIN,
     icon: <CrownOutlined />,
     children: [
       {
         path: "/admin/user",
         name: "用户管理",
-        access: ACCESS_ENUM.NOT_LOGIN,
+        access: ACCESS_ENUM.ADMIN,
       },
       {
         path: "/admin/promotion",
         name: "宣传管理",
-        access: ACCESS_ENUM.NOT_LOGIN,
+        access: ACCESS_ENUM.ADMIN,
       },
       {
         path: "/admin/assistance",
         name: "助力管理",
-        access: ACCESS_ENUM.NOT_LOGIN,
+        access: ACCESS_ENUM.ADMIN,
       },
       {
         path: "/admin/count",
         name: "数据统计",
-        access: ACCESS_ENUM.NOT_LOGIN,
+        access: ACCESS_ENUM.ADMIN,
       },
     ],
   },

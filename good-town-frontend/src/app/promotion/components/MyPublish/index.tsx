@@ -1,6 +1,6 @@
 "use client";
 
-import type { PopconfirmProps } from "antd";
+import {Image, PopconfirmProps} from "antd";
 import {
   Button,
   Carousel,
@@ -51,7 +51,7 @@ const contentStyle: React.CSSProperties = {
   color: "#fff",
   lineHeight: "160px",
   textAlign: "center",
-  background: "#364d79",
+  background: "rgba(255,255,255,0)",
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -452,16 +452,19 @@ const MyPublish: React.FC = () => {
                       {myUndoAssistanceList && myUndoAssistanceList.length > 0 ?
                           myUndoAssistanceList[currentUserIndex]?.user?.userName ?? "暂无数据" : "无数据"}
                   </h5>
-                  <p>
-                      {myUndoAssistanceList && myUndoAssistanceList.length > 0 ?
-                          myUndoAssistanceList[currentUserIndex]?.description ?? "暂无数据" : "无数据"}
-                  </p>
-                  <Carousel>
-                      <div>
-                          <h3 style={contentStyle}> {myPromotionList?.[currentPage - 1].picture ?? "暂无数据"}
-                          </h3>
-                      </div>
-                  </Carousel>
+                  {/*<p>*/}
+                  {/*    {myUndoAssistanceList && myUndoAssistanceList.length > 0 ?*/}
+                  {/*        myUndoAssistanceList[currentUserIndex]?.description ?? "暂无数据" : "无数据"}*/}
+                  {/*</p>*/}
+                  {/*<Carousel>*/}
+                  {/*    <div>*/}
+                  {/*        <h3 style={contentStyle}> {myPromotionList?.[currentPage - 1].picture ?? "暂无数据"}*/}
+                  {/*        </h3>*/}
+                  {/*    </div>*/}
+                  {/*</Carousel>*/}
+                  {/*<div>*/}
+                  {/*<Image src={myPromotionList?.[currentPage - 1].picture ?? "暂无数据"} alt="宣传图片" />*/}
+                  {/*</div>*/}
               </Paragraph>
           </Modal>
     </PageContainer>

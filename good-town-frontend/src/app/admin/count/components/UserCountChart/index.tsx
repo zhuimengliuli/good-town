@@ -6,30 +6,41 @@ import EChartsReact from "echarts-for-react";
 import {getAssistanceUserCountUsingGet} from "@/api/assistanceController";
 import {message} from "antd";
 
+interface Props {
+    year: number,
+    townName: string,
+}
+
 /**
  * 用户计数（图）
  *
  * @constructor
  */
-const UserCountChart= () => {
+const UserCountChart= (props: Props) => {
     const [monthList, setMonthList] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
     const [promotionUserCountList, setPromotionUserCountList] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
     const [assistanceUserCountList, setAssistanceUserCountList] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
-    const year = new Date().getFullYear();
+    const { year, townName } = props;
 
-    const fetchUserCountList = async (year: number) => {
+    const fetchUserCountList = async (year: number, townName: string) => {
         try {
-            const promotionUserCount = await getPromotionUserCountUsingGet({year : year});
-            const assistanceUserCount = await getAssistanceUserCountUsingGet({year : year});
+            const promotionUserCount = await getPromotionUserCountUsingGet({year : year, townName: townName});
             setPromotionUserCountList(promotionUserCount.data);
-            setAssistanceUserCountList(assistanceUserCount.data);
+            console.log(promotionUserCount);
         } catch (e: any) {
-            message.error('获取用户统计失败' + e.message());
+            message.error('获取宣传用户图统计失败' + e.message);
+        }
+        try {
+            const assistanceUserCount = await getAssistanceUserCountUsingGet({year : year, townName: townName});
+            setAssistanceUserCountList(assistanceUserCount.data);
+            console.log(assistanceUserCount);
+        } catch (e: any) {
+            message.error('获取助力用户图统计失败' + e.message);
         }
     }
     useEffect(() => {
-        fetchUserCountList(year);
-    }, []);
+        fetchUserCountList(year, townName);
+    }, [year, townName]);
     const option = {
         title: {
             text: '数据统计'

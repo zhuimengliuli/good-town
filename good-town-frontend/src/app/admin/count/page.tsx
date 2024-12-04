@@ -1,6 +1,8 @@
 "use client";
-import {ProForm, ProFormText} from "@ant-design/pro-components";
+import {ProForm, ProFormCascader, ProFormText} from "@ant-design/pro-components";
 import UserCount from "@/app/admin/count/components/UserCount";
+import React, {useState} from "react";
+import {TOWN_LIST} from "@/app/constants/town";
 
 /**
  * 用户统计页面
@@ -8,17 +10,17 @@ import UserCount from "@/app/admin/count/components/UserCount";
  * @constructor
  */
 const UserCountPage: React.FC = () => {
-  const year = new Date().getFullYear();
-
+  const [year, setYear] = useState<number>(new Date().getFullYear());
+    const [townName, setTownName] = useState<string>("");
   return (
     <div>
       <ProForm<{
         year: string;
-        town: string;
+        townName: string;
       }>
         layout="horizontal"
         onFinish={async (values) => {
-          return <UserCount year={values.year} />;
+            setYear(values.year);
         }}
       >
         <ProFormText
@@ -28,15 +30,20 @@ const UserCountPage: React.FC = () => {
           initialValue={year}
           width="md"
         />
-        <ProFormText
-          name="town"
-          label="乡镇"
-          placeholder="请输入乡镇"
-          initialValue="安庆"
-          width="md"
-        />
+          <ProFormCascader
+              name="townName"
+              width="md"
+              request={async () => TOWN_LIST}
+              label="区域"
+              initialValue={['北京市', '北京市', '海淀区']}
+              fieldProps={{
+                  onChange: (value, selectedOptions) => {
+                      setTownName(value?.length > 0 ? value[value.length - 1] : "");
+                  },
+              }}
+          />
       </ProForm>
-      <UserCount year={year} />
+      <UserCount year={year} townName={townName}/>
     </div>
   );
 };

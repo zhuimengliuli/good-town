@@ -181,7 +181,7 @@ declare namespace API {
   };
 
   type getAssistanceUserCountUsingGETParams = {
-    /** year */
+    townName?: string;
     year?: number;
   };
 
@@ -196,7 +196,7 @@ declare namespace API {
   };
 
   type getPromotionUserCountUsingGETParams = {
-    /** year */
+    townName?: string;
     year?: number;
   };
 
