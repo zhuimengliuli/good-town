@@ -176,15 +176,28 @@ const AssistancePage: React.FC = () => {
     // 表单项内容
     const formRef = useRef();
     const loginUser = useSelector((state: RootState) => state.loginUser);
-    const handleFinish = async (values:API.AssistanceAddRequest) => {
+    const handleFinish = async (values:API.addAssistanceUsingPOSTParams) => {
         try {
             values.userId = loginUser.id;
             values.promotionId = allPromotionList?.[currentIndex].id;
             console.log('Form values:', values);
-            const res = await addAssistanceUsingPost(values);
+
+            const { picture,  ...formDataValues } = values; // 拆分文件字段和其他字段
+
+            // 将普通字段（API.addPromotionUsingPOSTParams字段）保留为JSON对象
+            const params: API.addAssistanceUsingPOSTParams = { ...formDataValues };
+
+            // 获取实际的 File 对象
+            const pictureFile = picture?.[0]?.originFileObj;
+            //const videoFile = video?.[0]?.originFileObj;
+
+            // 传入编辑的promotion的id
+            const res = await addAssistanceUsingPost(params, {}, pictureFile);
+
             if (res.data) {
                 message.success("发布助力成功");
             }
+
             fetchData();
         } catch (e: any) {
             message.error("发布助力失败，" + e.message);
@@ -192,13 +205,24 @@ const AssistancePage: React.FC = () => {
         // 处理提交的表单数据 setIsModalVisible(false); 
     };
     const editFormRef = useRef();
-    const handleEditFinish = async (values: API.AssistanceEditRequest) => {
+    const handleEditFinish = async (values: API.editAssistanceUsingPOSTParams) => {
         try {
             values.userId = loginUser.id;
             values.promotionId = undoPromotionList?.[currentIndex].id;
             values.id = myUndoAssistanceList?.[currentIndex].id;
             console.log('Form values:', values);
-            const res = await editAssistanceUsingPost(values);
+
+            const { picture,  ...formDataValues } = values; // 拆分文件字段和其他字段
+
+            // 将普通字段（API.addPromotionUsingPOSTParams字段）保留为JSON对象
+            const params: API.editAssistanceUsingPOSTParams = { ...formDataValues };
+
+            // 获取实际的 File 对象
+            const pictureFile = picture?.[0]?.originFileObj;
+            //const videoFile = video?.[0]?.originFileObj;
+
+            // 传入编辑的promotion的id
+            const res = await editAssistanceUsingPost(params, {}, pictureFile);
             if (res.data) {
                 message.success("编辑助力成功");
             }
@@ -244,7 +268,7 @@ const AssistancePage: React.FC = () => {
                             <h4>发布</h4>
                         </Paragraph>
                         <Paragraph>
-                        <h2>{allPromotionList?.[currentIndex].themeName }</h2>
+                        <h2>{allPromotionList?.[currentIndex]?.themeName }</h2>
                     </Paragraph>
                     <Paragraph>
                         <ProForm
@@ -273,7 +297,7 @@ const AssistancePage: React.FC = () => {
                         </Paragraph>
                         <Paragraph>
                             
-                            <h2>{undoPromotionList?.[currentIndex].themeName }</h2>
+                            <h2>{undoPromotionList?.[currentIndex]?.themeName }</h2>
                         </Paragraph>
                     <Paragraph>
                         <ProForm

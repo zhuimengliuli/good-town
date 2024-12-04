@@ -22,8 +22,6 @@ const PromotionPage: React.FC = () => {
             });
             list = res.data.records;
             setPromotionList(list);
-            console.log(res.data?.records);
-            console.log(promotionList);
         } catch (e: any) {
             message.error("获取宣传信息失败" + e.message);
         }
