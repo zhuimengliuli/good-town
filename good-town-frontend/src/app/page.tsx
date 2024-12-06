@@ -1,7 +1,9 @@
 "use client";
 import "./index.css";
-import {listPromotionVoByPageUsingPost} from "@/api/promotionController";
+import {useRouter} from "next/navigation";
 
 export default async function HomePage() {
-  return <div>主页</div>;
+  const router = useRouter();
+  router.push("/promotion");
+  return <div></div>;
 }

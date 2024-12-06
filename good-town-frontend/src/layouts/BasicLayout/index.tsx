@@ -62,7 +62,7 @@ export default function BasicLayout({ children }: Props) {
           pathname,
         }}
         avatarProps={{
-          src: loginUser.userAvatar || "/assets/notLoginUser.png",
+          src:  "/assets/notLoginUser.png",
           size: "small",
           title: loginUser.userName || "guest",
           render: (props, dom) => {
@@ -109,7 +109,8 @@ export default function BasicLayout({ children }: Props) {
         }}
         actionsRender={(props) => {
           if (props.isMobile) return [];
-          return [<SearchInput key="search" />];
+          // return [<SearchInput key="search" />];
+          return;
         }}
         headerTitleRender={(logo, title, _) => {
           return (

@@ -5,7 +5,7 @@ import {
   ProFormText,
   ProFormTextArea,
 } from "@ant-design/pro-components";
-import {Avatar, Card, Col, message, Row, Space, Upload} from "antd";
+import {Avatar, Card, Col, Image, message, Row, Space, Upload} from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/stores";
 import React from "react";
@@ -15,6 +15,8 @@ import Title from "antd/es/typography/Title";
 import Paragraph from "antd/es/typography/Paragraph";
 import { useRouter } from "next/navigation";
 import useForm = ProForm.useForm;
+import UserVO = API.UserVO;
+import LoginUserVO = API.LoginUserVO;
 
 /**
  * 用户中心页面
@@ -30,9 +32,7 @@ const UserCenterPage: React.FC = () => {
       <Row gutter={[16, 16]}>
         <Col xs={24} md={6}>
           <Card style={{ textAlign: "center" }}>
-            <Upload>
-              <Avatar src={loginUser.userAvatar} size={288} />
-            </Upload>
+              <Image src="/assets/notLoginUser.png" />
             <div style={{ marginBottom: 16 }} />
             <Card.Meta
               title={
@@ -55,14 +55,16 @@ const UserCenterPage: React.FC = () => {
           >
             <ProForm<API.UserVO>
               layout="horizontal"
-              onFinish={async (values) => {
+              onFinish={async (values: LoginUserVO) => {
                 try {
                   const res = updateMyUserUsingPost(values);
-                  if (res.data) {
+                  if (res) {
                     message.success("提交成功");
+                    values.userAvatar = loginUser.userAvatar;
+                    values.userRole = loginUser.userRole;
+                    values.id = loginUser.id;
                     dispatch(setLoginUser(values));
                   }
-                  router.push("/user/center");
                 } catch (e: any) {
                   message.error("修改用户信息失败，" + e.message);
                 }

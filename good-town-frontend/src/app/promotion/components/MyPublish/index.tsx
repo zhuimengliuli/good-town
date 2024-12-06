@@ -51,7 +51,7 @@ const contentStyle: React.CSSProperties = {
   color: "#fff",
   lineHeight: "160px",
   textAlign: "center",
-  background: "rgba(255,255,255,0)",
+  background: "rgba(172,172,172,0.04)",
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',

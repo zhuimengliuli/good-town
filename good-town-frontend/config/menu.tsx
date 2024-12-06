@@ -3,11 +3,11 @@ import {CrownOutlined} from "@ant-design/icons";
 import {ACCESS_ENUM} from "@/access/accessEnum";
 
 export const menus = [
-  {
-    path: "/",
-    name: "主页",
-    access: ACCESS_ENUM.NOT_LOGIN,
-  },
+  // {
+  //   path: "/",
+  //   name: "主页",
+  //   access: ACCESS_ENUM.NOT_LOGIN,
+  // },
   {
     path: "/promotion",
     name: "我宣传",
