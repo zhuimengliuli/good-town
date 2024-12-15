@@ -1,18 +1,11 @@
 @echo off
-REM ---------------------------
-REM 自动化运行 MinIO 容器的脚本
-REM ---------------------------
 
-REM 设置 MinIO 环境变量
-echo pull lastet minio image...
-docker pull docker.unsee.tech/minio/minio
-echo pull finished.
-
+REM 设置 minio 用户名和密码
 set MINIO_ROOT_USER=good_town
 set MINIO_ROOT_PASSWORD=good_town
 
 REM 设置数据存储路径
-set DATA_DIR=D:\good_town\minio\data
+set DATA_DIR=C:\good_town\minio\data
 
 REM 检查 Docker 是否已启动
 docker info >nul 2>&1
